@@ -1,0 +1,122 @@
+.signup-body{
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+    background-image: url("signup_body_1.jpg");
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;      /* fills screen */
+    background-position: center; /* center image */
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* optional */
+}
+.head_login{
+    font-size: 50px;
+    color: white;
+    text-align: center;
+    font-family: "work sans", sans-serif;
+    display: flex;
+    gap: 10px;
+    background: linear-gradient(
+    to right,
+    rgba(4, 4, 4, 0.6),
+    rgba(248, 246, 246, 0.6)
+    );
+    padding: 15px;
+    height: 90px;
+}
+
+.heading{
+    text-align: center;
+    margin-bottom: -15px;
+}
+
+.signup-box{
+    background-color:rgba(0, 0, 0, 0.6);
+    border-radius: 20px;
+    width:500px;
+    height: 550px;
+    margin-left: 520px;
+    margin-top: 30px;
+    color: white;
+    text-align: left;
+}
+input{
+    font-size: large;
+    border: none;
+    width: 250px;
+    height: 30px;
+    margin-left:10px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    align-items: center;
+    margin-right: -50px;
+}
+.name{
+    font-size: large;
+    margin-left: 125px;
+    margin-top: 45px;
+    /* margin-bottom: 20px; */
+}
+.email{
+    font-size: large;
+    margin-left: 130px;
+    margin-top: 25px;
+    margin-bottom: 20px;
+}
+.password{
+    font-size: large;
+    margin-left: 100px;
+    margin-top: 25px;
+    margin-bottom: 20px;
+}
+.confirm_password{
+    font-size: large;
+    margin-left: 30px;
+    margin-top: 25px;
+    margin-bottom: 20px;
+}
+.show_password{
+    margin-top: -80px;
+    margin-left: 175px;
+}
+.show-btn{
+    margin-left: 50px;
+    background-color: rgb(43, 89, 226);
+    opacity: 1.0;
+    color: white;
+    text-align: center;
+    width: 40px;
+    height: 35px;
+    border-radius: 10px;
+    border: none;
+}
+.role{
+    font-size: large;
+    margin-left: 140px;
+    margin-top: 25px;
+    margin-bottom: 20px;
+    margin-right: 10px;
+}
+select{
+    font-size: large;
+    border: none;
+    width: 250px;
+    height: 30px;
+    margin-left:3px;
+    margin-top: 25px;
+    margin-bottom: 20px;
+    align-items: center;
+    border-radius: 7px;
+}
+.btn{
+    margin-left: 180px;
+    margin-top: 25px;
+    background-color: rgb(184, 18, 18);
+    opacity: 1.0;
+    color: white;
+    text-align: center;
+    width: 120px;
+    height: 40px;
+    border-radius: 10px;
+}
