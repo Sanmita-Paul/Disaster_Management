@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 const bcrypt = require("bcrypt");
 const cors = require("cors");
 const { Pool } = require("pg");
@@ -11,10 +12,10 @@ app.use(express.json());
 
 // PostgreSQL Connection
 const pool = new Pool({
-  connectionString: "postgresql://postgres:postgres2026@db.werpkrzqfrlpjruylwvz.supabase.co:5432/postgres",
+  connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false,
-  },
+    rejectUnauthorized: false
+  }
 });
 
 // Test route
