@@ -1,4 +1,3 @@
-// AdminSidebar.tsx
 import React from "react";
 
 interface Props {
@@ -20,12 +19,12 @@ const AdminSidebar: React.FC<Props> = ({ setPage }) => {
     <div className="admin-sidebar">
       <h2>Admin Panel</h2>
 
-      <button type="button" onClick={() => setPage("stats")}>Dashboard</button>
-      <button type="button" onClick={() => setPage("reports")}>Disaster Reports</button>
-      <button type="button" onClick={() => setPage("map")}>Map View</button>
-      <button type="button" onClick={() => setPage("resources")}>Resources</button>
-      <button type="button" onClick={() => setPage("users")}>Manage Users</button>
-      <button type="button" onClick={() => setPage("analytics")}>Analytics</button>
+      <button type="button" onClick={() => setPage("stats")}>📊 Dashboard</button>
+      <button type="button" onClick={() => setPage("reports")}>📝 Disaster Reports</button>
+      <button type="button" onClick={() => setPage("map")}>🗺️ Map View</button>
+      <button type="button" onClick={() => setPage("resources")}>📦 Resources</button>
+      <button type="button" onClick={() => setPage("users")}>👥 Manage Users</button>
+      <button type="button" onClick={() => setPage("analytics")}>📈 Analytics</button>
 
       {/* Logout Button */}
       <button
@@ -33,7 +32,7 @@ const AdminSidebar: React.FC<Props> = ({ setPage }) => {
         className="logout-btn"
         type="button"
       >
-        Logout
+        🚪 Logout
       </button>
     </div>
   );

@@ -1,6 +1,6 @@
 import AdminDashboard from "./admin/AdminDashboard";
 import { NGODashboard } from "./ngo_dash";
-import { VolunteerDashboard } from "./volun_dash";
+import VolunteerDashboard from "./volunteer/VolunteerDashboard";
 import UserDashboard from "./user/UserDashboard";
 
 export function Dashboard() {
