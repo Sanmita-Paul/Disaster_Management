@@ -11,6 +11,7 @@ header{
     padding: 12px;
     display:flex;
     gap: 20px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
 }
 .logo{
   width: 69px;
@@ -18,8 +19,21 @@ header{
   margin-left: 10px;
 }
 
+header{
+    background: linear-gradient(to right, #3d0c02, #b92e34);
+    color: white;
+    font-family:"work sans", sans-serif;
+    padding: 12px;
+    display:flex;
+    gap: 20px;
+    align-items: center;   /* ✅ vertical alignment */
+}
+
+h1 {
+  flex: 1;   /* ✅ pushes buttons to right */
+}
+
 .login-btn{
-  margin-left: 750px;
   text-align: center;
   font-size: large;
   border-radius: 10px;
@@ -72,7 +86,7 @@ header{
 .slideshow-wrapper {
   position: relative;
   width: 100vw;   /* 100% of viewport width */
-  height: 75vh;  /* 100% of viewport height */
+  height: 77vh;  /* 100% of viewport height */
   object-fit: cover; 
   overflow: hidden;
 }
@@ -110,10 +124,16 @@ header{
 
 /*footer*/
 footer {
+  margin-top: auto;   
   background-color: rgb(100, 96, 96);
   color: white;
   text-align: center;
   padding: 10px 0;
   font-family: "work sans", sans-serif;
-  height: 51px;
+  height: 56px;
+}
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;   /* full screen height */
 }

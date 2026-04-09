@@ -1,5 +1,6 @@
 import './login.css'
-
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 function Header_login(){
   return(
     <>
@@ -11,10 +12,8 @@ function Header_login(){
   )
 }
 
-import { useState } from "react";
-
-function login_box(){
-
+function Login_box(){
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -32,7 +31,13 @@ function login_box(){
 
       const data = await response.json();
       alert(data.message);
-
+      if (data.user && data.user.role) {
+  localStorage.setItem("role", data.user.role);
+  navigate("/dashboard");
+} else {
+  alert(data.message || "Login failed");
+}
+      console.log(data);
     } catch (error) {
       console.error("Error:", error);
       alert("Server error");
@@ -74,11 +79,16 @@ function login_box(){
       </form>
     </div>
   )
-}export function Login() {
+}
+
+export function Login() {
   return(
     <div className='login-body'>
-      {Header_login()}
-      {login_box()}
+      <Header_login />
+      <div className="login-container">
+        <Login_box />
+      </div>
+
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import "./signup.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Header_signup(){
   return(
@@ -12,8 +13,8 @@ function Header_signup(){
   )
 }
 
-function signup_box(){
-
+function Signup_box(){
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -118,7 +119,7 @@ function signup_box(){
         </select>
         <br></br>
 
-        <button className="btn" type="submit">Submit</button>
+        <button className="btn" type="submit" onClick={() => navigate("/login")}>Submit</button>
       </form>
     </div>
     </>
@@ -128,8 +129,11 @@ function signup_box(){
 export function Signup(){
   return(
     <div className="signup-body">
-      {Header_signup()}
-      {signup_box()}
+      <Header_signup />
+      <div className="signup-container">
+        <Signup_box />
+      </div>
+
     </div>
   )
 }

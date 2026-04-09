@@ -1,0 +1,156 @@
+body {
+  margin: 0;
+  font-family: "work sans", sans-serif;
+  background: #f4f6f9;
+}
+
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background: #0F5132;
+  color: white;
+  padding: 20px;
+}
+
+.dashboard-content {
+  flex: 1;
+  padding: 30px;
+}
+
+.sidebar-title {
+  margin-bottom: 20px;
+}
+
+.sidebar button {
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  border: none;
+  background: #0B6623;
+  color: white;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.sidebar button:hover {
+  background:  #58BB43;
+}
+
+/* Pages */
+
+.page-container h2 {
+  margin-bottom: 20px;
+}
+
+/* Form */
+
+.report-form input {
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.report-form button {
+  padding: 10px 15px;
+  background: #58BB43;
+  border: none;
+  color: white;
+  border-radius: 6px;
+}
+
+/* Cards */
+
+.card {
+  background: white;
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.alert-card {
+  background: #fff3cd;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+/*HOMEPAGE*/
+/* Home container */
+
+.home-container {
+  padding: 20px;
+}
+
+/* Welcome box */
+
+.welcome-box {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.welcome-box h1 {
+  margin-bottom: 10px;
+}
+
+/* Shelter section */
+
+.shelter-box h2 {
+  margin-bottom: 20px;
+}
+
+/* Card layout */
+
+.shelter-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Individual cards */
+
+.shelter-card {
+  background: white;
+  padding: 18px;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.shelter-card h3 {
+  margin-bottom: 10px;
+}
+
+.shelter-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+}
+
+/*HEADER*/
+.head_welcome{
+  background: linear-gradient(90deg, #0F5132, #198754, #58BB43);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  margin-top:0px;
+  font-size: 50px;
+  color: white;
+  font-family: "work sans", sans-serif;
+  display: flex;
+  align-items: center;     
+  gap: 15px;
+  padding: 15px;
+  height: 90px;
+}
+
+.logo{
+  width: 69px;
+  height: 65px;
+  margin-left: 10px;
+}

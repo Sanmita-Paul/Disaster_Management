@@ -1,0 +1,57 @@
+body {
+  margin: 0;
+  background: #f3f4f6;
+  font-family: Arial, sans-serif;
+}
+
+.dashboard {
+  display: flex;
+}
+
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background: #1f2937;
+  color: white;
+  padding: 20px;
+}
+
+.sidebar button {
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  border: none;
+  background: #374151;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.sidebar button:hover {
+  background: #4b5563;
+}
+
+.content {
+  flex: 1;
+  padding: 30px;
+}
+
+.form input {
+  margin-right: 10px;
+  padding: 8px;
+}
+
+.form button {
+  padding: 8px 15px;
+  background: #2563eb;
+  color: white;
+  border: none;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}

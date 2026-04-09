@@ -38,12 +38,20 @@ app.post("/login", async (req, res) => {
     }
 
     const user = result.rows[0];
+    console.log("USER FROM DB:", user);
 
     // 🔐 Compare password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (isMatch) {
-      res.json({ message: "Login successful" });
+      res.json({
+      message: "Login successful",
+      user: {
+      name: user.name,
+      email: user.email,
+      role: user.role
+      }
+    });
     } else {
       res.json({ message: "Invalid credentials" });
     }

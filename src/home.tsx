@@ -1,19 +1,31 @@
 import './home.css';
 import { useState, useEffect } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 function Header(){
-    return(
+  const navigate = useNavigate();
+
+  return (
     <header>
-        <img src="/logo.png" alt="logo" className="logo" />
-        <h1>Disaster Management</h1>
-        <a href="/login" target='_blank'>
-          <button className="login-btn">Login</button>
-        </a>
-        <a href="/signup" target="_blank">
-          <button className="signup-btn">Sign Up</button>
-        </a>
+      <img src="/logo.png" alt="logo" className="logo" />
+      <h1>Disaster Management</h1>
+
+      <button 
+        className="login-btn"
+        onClick={() => navigate("/login")}
+      >
+        Login
+      </button>
+
+      <button 
+        className="signup-btn"
+        onClick={() => navigate("/signup")}
+      >
+        Sign Up
+      </button>
     </header>
-    )
+  );
 }
 function AlertMessage(){
     return(
@@ -83,11 +95,11 @@ function Footer(){
 
 export function Home() {
   return (
-    <>
+    <div className="page-container">
       <Header />
       <AlertMessage />
       <Slideshow />
       <Footer />
-    </>
+    </div>
   );
 }

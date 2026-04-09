@@ -36,11 +36,20 @@
     border-radius: 20px;
     width:500px;
     height: 550px;
-    margin-left: 520px;
-    margin-top: 30px;
     color: white;
     text-align: left;
+    display: flex;              
+    flex-direction: column;
+    margin-top: 30px;
 }
+
+.signup-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;   
+  align-items: center;       
+}
+
 input{
     font-size: large;
     border: none;
@@ -114,6 +123,15 @@ select{
     margin-top: 25px;
     background-color: rgb(184, 18, 18);
     opacity: 1.0;
+    color: white;
+    text-align: center;
+    width: 120px;
+    height: 40px;
+    border-radius: 10px;
+}
+.btn:hover{
+    background-color: rgb(184, 18, 18);
+    opacity: 0.8;
     color: white;
     text-align: center;
     width: 120px;
