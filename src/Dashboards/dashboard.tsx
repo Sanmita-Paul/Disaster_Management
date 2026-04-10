@@ -1,5 +1,5 @@
 import AdminDashboard from "./admin/AdminDashboard";
-import { NGODashboard } from "./ngo_dash";
+import NGODashboard from "./ngo/NGODashboard";
 import VolunteerDashboard from "./volunteer/VolunteerDashboard";
 import UserDashboard from "./user/UserDashboard";
 

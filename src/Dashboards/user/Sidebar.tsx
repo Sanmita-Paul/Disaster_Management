@@ -19,6 +19,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setPage }) => {
       <button type="button" onClick={() => setPage("alerts")}>📢 Alerts</button>
       <button type="button" onClick={() => setPage("status")}>📄 Status</button>
       <button type="button" onClick={() => setPage("contacts")}>📞 Contacts</button>
+      <button type="button" onClick={() => setPage("map")}>🗺️ Map</button>
 
       <button type="button" className="logout-btn" onClick={handleLogout}>
         🚪 Logout

@@ -4,7 +4,7 @@ import AdminSidebar from "./AdminSidebar";
 
 import Stats from "./Stats";
 import DisasterReports from "./DisasterReports";
-import MapView from "./MapView";
+import MapView from "../../components/MapView";
 import Resources from "./Resources";
 import ManageUsers from "./ManageUsers";
 import Analytics from "./Analytics";
@@ -29,7 +29,7 @@ const AdminDashboard: React.FC = () => {
       case "reports":
         return <DisasterReports />;
       case "map":
-        return <MapView />;
+      return <MapView role="Admin" />;
       case "resources":
         return <Resources />;
       case "users":

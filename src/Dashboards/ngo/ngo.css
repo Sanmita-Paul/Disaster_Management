@@ -1,0 +1,78 @@
+.head_ngo{
+  background: linear-gradient(90deg, #a63d01, #d24e01, #ff7a2f);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  margin-top: 0px;
+  font-size: 50px;
+  color: white;
+  font-family: "work sans", sans-serif;
+  display: flex;
+  align-items: center;     
+  gap: 15px;
+  padding: 15px;
+  height: 90px;
+}
+
+.ngo-dashboard-container{
+  display:flex;
+  min-height:100vh;
+}
+
+.ngo-sidebar{
+  width:260px;
+  background:#a63d01;
+  color:white;
+  padding:20px;
+}
+
+.ngo-sidebar button{
+  width:100%;
+  margin:8px 0;
+  padding:12px 15px;
+  border:none;
+  background:#d24e01;
+  color:white;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.ngo-sidebar button:hover{
+  background:#ff7a2f;
+}
+
+.ngo-content{
+  flex:1;
+  padding:30px;
+}
+
+/* REQUEST ACTION BUTTONS */
+
+.request-actions{
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.request-actions button{
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.accept-btn{
+  background: #28a745;
+  color: white;
+}
+
+.accept-btn:hover{
+  background: #218838;
+}
+
+.reject-btn{
+  background: #dc3545;
+  color: white;
+}
+
+.reject-btn:hover{
+  background: #c82333;
+}

@@ -6,6 +6,7 @@ import Nearby from "./Nearby";
 import Alerts from "./Alerts";
 import Status from "./Status";
 import Contacts from "./Contacts";
+import MapView from "../../components/MapView";
 import "./dashboard.css";
 
 function Header_login(){
@@ -34,6 +35,8 @@ const UserDashboard: React.FC = () => {
       return <Alerts />;
     case "status":
       return <Status />;
+    case "map":
+    return <MapView role="User" />;
     case "contacts":
       return <Contacts />;
     default:

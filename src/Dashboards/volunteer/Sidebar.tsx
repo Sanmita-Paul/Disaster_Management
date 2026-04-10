@@ -17,6 +17,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setActivePage }) => {
       <button type="button" onClick={() => setActivePage("home")}>🏠 Home</button>
       <button type="button" onClick={() => setActivePage("alerts")}>🚨 Alerts</button>
       <button type="button" onClick={() => setActivePage("nearby")}>📍 Nearby</button>
+
+      {/* NEW MAP BUTTON */}
+      <button type="button" onClick={() => setActivePage("map")}>🗺️ Map</button>
+
       <button type="button" onClick={() => setActivePage("status")}>📋 Status</button>
       <button type="button" onClick={() => setActivePage("contacts")}>📞 Contacts</button>
 

@@ -5,6 +5,7 @@ import Alerts from "./Alerts";
 import Nearby from "./Nearby";
 import Status from "./Status";
 import Contacts from "./Contacts";
+import MapView from "../../components/MapView";
 import "./volunteer.css";
 
 function Header_login() {
@@ -29,6 +30,8 @@ const VolunteerDashboard = () => {
         return <Status />;
       case "contacts":
         return <Contacts />;
+      case "map":
+        return <MapView role="Volunteer" />;
       default:
         return <HomePage />;
     }
