@@ -4,12 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 function Header_signup(){
   return(
-    <>
-      <div className='head_login'>
-        <img src="/logo.png" alt="logo" className="logo" />
-        <h1>Disaster Management</h1>
-      </div>
-    </>
+    <div className='head_login'>
+      <img src="/logo.png" alt="logo" className="logo" />
+      <h1>Disaster Management</h1>
+    </div>
   )
 }
 
@@ -39,8 +37,21 @@ function Signup_box(){
         body: JSON.stringify({ name, email, password, role }),
       });
 
-      const data = await response.json();
-      alert(data.message);
+     const data = await response.json();
+alert(data.message);
+
+// ✅ STORE USER (THIS WAS MISSING)
+if (data.user) {
+  localStorage.setItem("user", JSON.stringify(data.user));
+  localStorage.setItem("role", data.user.role);
+}
+
+// ✅ Routing
+if (role === "ngo") {
+  navigate("/ngo/setup");
+} else {
+  navigate("/dashboard");
+}
 
     } catch (error) {
       console.error("Error:", error);
@@ -49,12 +60,10 @@ function Signup_box(){
   };
 
   return(
-    <>
     <div className="signup-box">
       <br></br>
       <h2 className="heading">Sign Up</h2>
 
-      {/* ✅ Only change here */}
       <form onSubmit={handleSubmit}>
 
         <label className="name">Name</label>
@@ -65,7 +74,6 @@ function Signup_box(){
           onChange={(e)=>setName(e.target.value)}
           required 
         />
-        <br></br>
 
         <label className="email">Email</label>
         <input 
@@ -75,7 +83,6 @@ function Signup_box(){
           onChange={(e)=>setEmail(e.target.value)}
           required 
         />
-        <br></br>
 
         <label className="password">Password</label>
         <input 
@@ -85,25 +92,24 @@ function Signup_box(){
           onChange={(e)=>setPassword(e.target.value)}
           required 
         />
-        <br></br>
 
         <label className="confirm_password">Confirm Password</label>
-         <div className="show_password">
-            <input 
-              type={showPassword ? "text" : "password"} 
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e)=>setConfirmPassword(e.target.value)}
-              required
-            />
-            <button  
-              className="show-btn"
-              type="button" 
-              onClick={() => setShowPassword(!showPassword)}
-            >
+        <div className="show_password">
+          <input 
+            type={showPassword ? "text" : "password"} 
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e)=>setConfirmPassword(e.target.value)}
+            required
+          />
+          <button  
+            className="show-btn"
+            type="button" 
+            onClick={() => setShowPassword(!showPassword)}
+          >
             {showPassword ? "🙈" : "🐵"}
-            </button>
-          </div>
+          </button>
+        </div>
 
         <label className="role">Role</label>
         <select 
@@ -117,12 +123,11 @@ function Signup_box(){
           <option value="ngo">NGO🏛️</option>
           <option value="volunteer">Volunteer🦺</option>
         </select>
-        <br></br>
 
-        <button className="btn" type="submit" onClick={() => navigate("/login")}>Submit</button>
+        {/* ❌ REMOVED onClick */}
+        <button className="btn" type="submit">Submit</button>
       </form>
     </div>
-    </>
   )
 }
 
@@ -133,7 +138,6 @@ export function Signup(){
       <div className="signup-container">
         <Signup_box />
       </div>
-
     </div>
   )
 }

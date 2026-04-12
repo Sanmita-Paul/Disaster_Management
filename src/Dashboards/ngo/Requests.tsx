@@ -1,19 +1,21 @@
-const Requests: React.FC = () => {
 
-  const requests = [
-    { id: 1, disaster: "Flood", location: "Assam", status: "Pending" },
-    { id: 2, disaster: "Fire", location: "Delhi", status: "Pending" }
+const Resources: React.FC = () => {
+
+  const resources = [
+    { id:1, type:"Food", quantity:200 },
+    { id:2, type:"Medical Kits", quantity:80 },
+    { id:3, type:"Shelter Beds", quantity:120 }
   ];
 
   return (
     <div className="page-container">
 
-      <h2>Disaster Requests</h2>
+      <h2>Resource Requests</h2>
 
-      {requests.map((r) => (
+      {resources.map((r)=>(
         <div className="card" key={r.id}>
-          <p><b>Disaster:</b> {r.disaster}</p>
-          <p><b>Location:</b> {r.location}</p>
+          <p><b>Type:</b> {r.type}</p>
+          <p><b>Quantity Needed:</b> {r.quantity}</p>
           <div className="request-actions">
   <button className="accept-btn">Accept</button>
   <button className="reject-btn">Reject</button>
@@ -25,4 +27,4 @@ const Requests: React.FC = () => {
   );
 };
 
-export default Requests;
+export default Resources;

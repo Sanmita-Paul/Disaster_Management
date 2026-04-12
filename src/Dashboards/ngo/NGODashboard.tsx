@@ -58,11 +58,11 @@ const NGODashboard: React.FC = () => {
           <h2>NGO Panel</h2>
 
           <button onClick={() => setPage("requests")}>
-            🚨 Disaster Requests
+            🚨 Resource Requests
           </button>
 
           <button onClick={() => setPage("resources")}>
-            📦 Resource Requests
+            📦 Resource Form
           </button>
 
           <button onClick={() => setPage("locations")}>

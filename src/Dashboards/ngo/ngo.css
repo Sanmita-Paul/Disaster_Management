@@ -1,3 +1,6 @@
+body{
+  overflow-y: auto;
+}
 .head_ngo{
   background: linear-gradient(90deg, #a63d01, #d24e01, #ff7a2f);
   box-shadow: 0 3px 8px rgba(0,0,0,0.2);
@@ -10,6 +13,9 @@
   gap: 15px;
   padding: 15px;
   height: 90px;
+   position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .ngo-dashboard-container{
@@ -75,4 +81,17 @@
 
 .reject-btn:hover{
   background: #c82333;
+}
+
+.resource-submit-btn{
+  background: #dc3545;
+  color: white;
+}
+
+.resource-submit-btn:hover{
+   background: #c82333;
+}
+input, select{
+  border: 2px solid black;
+  border-radius: 4px;
 }
