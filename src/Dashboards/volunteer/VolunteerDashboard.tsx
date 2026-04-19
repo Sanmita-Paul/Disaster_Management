@@ -1,54 +1,127 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
-import HomePage from "./HomePage";
+import Home from "./Home";
+import Tasks from "./Tasks";
+import ApplyNGO from "./ApplyNGO";
+import ApplicationStatus from "./ApplicationStatus";
 import Alerts from "./Alerts";
-import Nearby from "./Nearby";
-import Status from "./Status";
-import Contacts from "./Contacts";
 import MapView from "../../components/MapView";
 import "./volunteer.css";
 
-function Header_login() {
-  return (
-    <div className="vol-head-welcome">
-      <img src="/logo.png" alt="logo" className="vol-logo" />
-      <h1>Disaster Management</h1>
-    </div>
-  );
-}
+function VolunteerDashboard() {
+  const [page, setPage] = useState("home");
 
-const VolunteerDashboard = () => {
-  const [activePage, setActivePage] = useState("home");
+  // ✅ location status state must be INSIDE component
+  const [locationStatus, setLocationStatus] = useState("loading");
+  // loading | granted | denied
 
+  // ✅ SEND LOCATION TO BACKEND
+  const sendLocation = async (coords: any) => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+      await fetch("http://localhost:5000/update-location", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user._id,
+          location: coords,
+        }),
+      });
+
+      console.log("📍 Location updated:", coords);
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+
+  // ✅ AUTO LOCATION TRACKING
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setLocationStatus("denied");
+      return;
+    }
+
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        const coords = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        };
+
+        setLocationStatus("granted");
+        sendLocation(coords);
+      },
+      (err) => {
+        console.log(err.message);
+        setLocationStatus("denied");
+      }
+    );
+
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
+  }, []);
+
+  // ✅ PAGE RENDER
   const renderPage = () => {
-    switch (activePage) {
+    switch (page) {
+      case "home":
+        return <Home />;
+      case "tasks":
+        return <Tasks />;
+      case "apply":
+        return <ApplyNGO />;
+      case "status":
+        return <ApplicationStatus />;
       case "alerts":
         return <Alerts />;
-      case "nearby":
-        return <Nearby />;
-      case "status":
-        return <Status />;
-      case "contacts":
-        return <Contacts />;
       case "map":
-        return <MapView role="Volunteer" />;
+        return <MapView role="volunteer" />;
       default:
-        return <HomePage />;
+        return <Home />;
     }
   };
 
   return (
-  <>
-    <Header_login />
-    <div className="vol-dashboard-container">
-      <Sidebar setActivePage={setActivePage} />
-      <div className="vol-dashboard-content">
-        {renderPage()}
+    <>
+      {/* HEADER */}
+      <div className="vol-head-welcome">
+        <img src="/logo.png" className="vol-logo" />
+        <h1>Disaster Management</h1>
       </div>
-    </div>
-  </>
-);
 
-};
+      {/* MAIN */}
+      <div className="vol-dashboard-container">
+        <Sidebar setPage={setPage} />
+
+        <div className="vol-dashboard-content">
+          {/* ✅ LOCATION STATUS UI */}
+          {locationStatus === "loading" && (
+            <p style={{ color: "gray", fontSize: "14px", marginBottom: "10px" }}>
+              ⏳ Checking location...
+            </p>
+          )}
+
+          {locationStatus === "granted" && (
+            <p style={{ color: "green", fontSize: "14px", marginBottom: "10px" }}>
+              📍 Location tracking active
+            </p>
+          )}
+
+          {locationStatus === "denied" && (
+            <p style={{ color: "red", fontSize: "14px", marginBottom: "10px" }}>
+              ❌ Location access denied. Please enable browser permission.
+            </p>
+          )}
+
+          {renderPage()}
+        </div>
+      </div>
+    </>
+  );
+}
 
 export default VolunteerDashboard;

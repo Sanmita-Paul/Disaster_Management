@@ -13,12 +13,49 @@ function Header_signup(){
 
 function Signup_box(){
   const navigate = useNavigate();
+
+  // COMMON STATES
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  // VOLUNTEER STATES
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
+  const [aadhar, setAadhar] = useState("");
+  const [location, setLocation] = useState<any>(null);
+
+  // FILES (not sent yet)
+  const [idFile, setIdFile] = useState<File | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
+  // ✅ FIXED LOCATION FUNCTION (PROMISE)
+  const getLocation = () => {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        alert("Geolocation not supported");
+        reject(null);
+      } else {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const coords = {
+              lat: pos.coords.latitude,
+              lng: pos.coords.longitude
+            };
+            setLocation(coords);
+            resolve(coords);
+          },
+          () => {
+            alert("Please allow location access");
+            reject(null);
+          }
+        );
+      }
+    });
+  };
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
@@ -29,29 +66,48 @@ function Signup_box(){
     }
 
     try {
+      const payload: any = { name, email, password, role };
+
+      // ✅ VOLUNTEER LOGIC WITH LOCATION CHECK
+      if (role === "volunteer") {
+
+        // ensure location is fetched
+        if (!location) {
+          try {
+            await getLocation();
+          } catch {
+            alert("Location is required for volunteers");
+            return;
+          }
+        }
+
+        payload.age = age;
+        payload.gender = gender;
+        payload.aadhar = aadhar;
+        payload.location = location;
+      }
+
       const response = await fetch("http://localhost:5000/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password, role }),
+        body: JSON.stringify(payload),
       });
 
-     const data = await response.json();
-alert(data.message);
+      const data = await response.json();
+      alert(data.message);
 
-// ✅ STORE USER (THIS WAS MISSING)
-if (data.user) {
-  localStorage.setItem("user", JSON.stringify(data.user));
-  localStorage.setItem("role", data.user.role);
-}
+      if (data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("role", data.user.role);
+      }
 
-// ✅ Routing
-if (role === "ngo") {
-  navigate("/ngo/setup");
-} else {
-  navigate("/dashboard");
-}
+      if (role === "ngo") {
+        navigate("/ngo/setup");
+      } else {
+        navigate("/dashboard");
+      }
 
     } catch (error) {
       console.error("Error:", error);
@@ -61,12 +117,11 @@ if (role === "ngo") {
 
   return(
     <div className="signup-box">
-      <br></br>
       <h2 className="heading">Sign Up</h2>
 
       <form onSubmit={handleSubmit}>
 
-        <label className="name">Name</label>
+        <label>Name</label>
         <input 
           type="text" 
           placeholder="Enter Name" 
@@ -75,7 +130,7 @@ if (role === "ngo") {
           required 
         />
 
-        <label className="email">Email</label>
+        <label>Email</label>
         <input 
           type="email" 
           placeholder="Enter Email" 
@@ -84,7 +139,7 @@ if (role === "ngo") {
           required 
         />
 
-        <label className="password">Password</label>
+        <label>Password</label>
         <input 
           type="password" 
           placeholder="Enter Password" 
@@ -93,7 +148,7 @@ if (role === "ngo") {
           required 
         />
 
-        <label className="confirm_password">Confirm Password</label>
+        <label>Confirm Password</label>
         <div className="show_password">
           <input 
             type={showPassword ? "text" : "password"} 
@@ -111,12 +166,20 @@ if (role === "ngo") {
           </button>
         </div>
 
-        <label className="role">Role</label>
+        <label>Role</label>
         <select 
-          value={role}
-          onChange={(e)=>setRole(e.target.value)}
-          required
-        >
+  value={role}
+  onChange={(e)=>{
+    const selectedRole = e.target.value;
+    setRole(selectedRole);
+
+    // ✅ trigger location popup immediately
+    if (selectedRole === "volunteer") {
+      getLocation();
+    }
+  }}
+  required
+>
           <option value="">Select Role</option>
           <option value="admin">Admin👨‍💼</option>
           <option value="user">User👥</option>
@@ -124,7 +187,56 @@ if (role === "ngo") {
           <option value="volunteer">Volunteer🦺</option>
         </select>
 
-        {/* ❌ REMOVED onClick */}
+        {/* 🔥 VOLUNTEER EXTRA FIELDS */}
+        {role === "volunteer" && (
+          <>
+            {/* ✅ LOCATION STATUS */}
+            {!location && (
+              <p style={{ color: "yellow", fontSize: "14px" }}>
+                📍 Location will be requested on submit
+              </p>
+            )}
+
+            <label>Age</label>
+            <input 
+              value={age} 
+              onChange={(e)=>setAge(e.target.value)} 
+              required 
+            />
+
+            <label>Gender</label>
+            <select 
+              value={gender} 
+              onChange={(e)=>setGender(e.target.value)} 
+              required
+            >
+              <option value="">Select</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+
+            <label>Aadhar No.</label>
+            <input 
+              value={aadhar} 
+              onChange={(e)=>setAadhar(e.target.value)} 
+              required 
+            />
+
+            <label>Upload ID Proof</label>
+            <input 
+              type="file" 
+              onChange={(e)=>setIdFile(e.target.files?.[0] || null)} 
+            />
+
+            <label>Upload Profile Image</label>
+            <input 
+              type="file" 
+              onChange={(e)=>setImageFile(e.target.files?.[0] || null)} 
+            />
+          </>
+        )}
+
         <button className="btn" type="submit">Submit</button>
       </form>
     </div>

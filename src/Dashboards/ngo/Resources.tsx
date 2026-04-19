@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -133,92 +134,92 @@ const Requests: React.FC = () => {
   };
 
   return (
-    <div className="page-container">
-      <h2>Resource Form</h2>
+  <div className="page-container">
+    <h2>Resource Form</h2>
 
-      <div className="card">
-        <form onSubmit={handleSubmit}>
-          <label>Select Resource Type: </label>
-          <select
+    {/* ✅ FIX HERE */}
+    <div className="card card-accent">
+
+      <form onSubmit={handleSubmit}>
+
+        <label>Select Resource Type:</label>
+        <select
           value={type}
           onChange={(e) => setType(e.target.value)}
-          required>
-          
+          required
+        >
           <option value="shelter">Shelter</option>
           <option value="food">Food</option>
           <option value="medical">Medical</option>
           <option value="water">Water</option>
         </select>
-          <br />
 
-          <label>Quantity: </label>
-          <input
-            type="number"
-            placeholder="Quantity"
-            value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-            required
-          />
-          <br />
+        <label>Quantity:</label>
+        <input
+          type="number"
+          placeholder="Quantity"
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value))}
+          required
+        />
 
-          <select
-            value={availability ? "true" : "false"}
-            onChange={(e) => setAvailability(e.target.value === "true")}
-          >
-            <option value="true">Available</option>
-            <option value="false">Not Available</option>
-          </select>
-          <br />
+        <label>Availability:</label>
+        <select
+          value={availability ? "true" : "false"}
+          onChange={(e) => setAvailability(e.target.value === "true")}
+        >
+          <option value="true">Available</option>
+          <option value="false">Not Available</option>
+        </select>
 
-          {/* 🔍 SEARCH BAR */}
-          <input
-            type="text"
-            placeholder="Search Location..."
-            value={search}
-            onChange={(e) => handleSearch(e.target.value)}
-          />
+        {/* SEARCH */}
+        <input
+          type="text"
+          placeholder="Search Location..."
+          value={search}
+          onChange={(e) => handleSearch(e.target.value)}
+        />
 
-          {/* 🔽 SUGGESTIONS */}
-          {suggestions.length > 0 && (
-            <div className="suggestions">
-              {suggestions.map((s, i) => (
-                <div
-                  key={i}
-                  className="suggestion-item"
-                  onClick={() => handleSelect(s)}
-                >
-                  {s.display_name}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* 🗺️ MAP */}
-          <MapContainer
-            center={[26.85, 80.95]}
-            zoom={13}
-            style={{ height: "300px", marginTop: "10px" }}
-          >
-            <TileLayer
-              attribution="&copy; OpenStreetMap contributors"
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-
-            <LocationPicker setLatLng={setPosition} />
-
-            {position && <Marker position={position} />}
-          </MapContainer>
-
-          <div className="request-actions">
-            <button className="resource-submit-btn" type="submit">
-              Submit Resource
-            </button>
+        {/* SUGGESTIONS */}
+        {suggestions.length > 0 && (
+          <div className="suggestions">
+            {suggestions.map((s, i) => (
+              <div
+                key={i}
+                className="suggestion-item"
+                onClick={() => handleSelect(s)}
+              >
+                {s.display_name}
+              </div>
+            ))}
           </div>
+        )}
 
-        </form>
-      </div>
+        {/* MAP */}
+        <MapContainer
+          center={[26.85, 80.95]}
+          zoom={13}
+          style={{ height: "300px", marginTop: "10px" }}
+        >
+          <TileLayer
+            attribution="&copy; OpenStreetMap contributors"
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+
+          <LocationPicker setLatLng={setPosition} />
+
+          {position && <Marker position={position} />}
+        </MapContainer>
+
+        <div className="request-actions">
+          <button className="resource-submit-btn" type="submit">
+            Submit Resource
+          </button>
+        </div>
+
+      </form>
     </div>
-  );
-};
-
+  </div>
+);
+}
 export default Requests;

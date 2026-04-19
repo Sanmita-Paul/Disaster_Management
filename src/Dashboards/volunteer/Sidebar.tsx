@@ -1,35 +1,37 @@
-import React from "react";
+import "./volunteer.css";
 
-interface SidebarProps {
-  setActivePage: (page: string) => void;
-}
+type Props = {
+  setPage: (page: string) => void;
+};
 
-const Sidebar: React.FC<SidebarProps> = ({ setActivePage }) => {
+function Sidebar({ setPage }: Props) {
+
   const handleLogout = () => {
-    localStorage.removeItem("role"); // remove login role
-    window.location.href = "/";       // redirect to home/login page
+    localStorage.clear();
+    window.location.href = "/";
   };
 
   return (
     <div className="vol-sidebar">
       <h2 className="vol-sidebar-title">Volunteer Panel</h2>
 
-      <button type="button" onClick={() => setActivePage("home")}>🏠 Home</button>
-      <button type="button" onClick={() => setActivePage("alerts")}>🚨 Alerts</button>
-      <button type="button" onClick={() => setActivePage("nearby")}>📍 Nearby</button>
+      <button onClick={() => setPage("home")}>🏠 Home</button>
+      <button onClick={() => setPage("tasks")}>📋 Tasks</button>
+      <button onClick={() => setPage("apply")}>📝 Apply to NGO</button>
+      <button onClick={() => setPage("status")}>📊 Application Status</button>
+      <button onClick={() => setPage("alerts")}>🚨 Alerts</button>
+      <button onClick={() => setPage("map")}>🗺️ Map</button>
 
-      {/* NEW MAP BUTTON */}
-      <button type="button" onClick={() => setActivePage("map")}>🗺️ Map</button>
-
-      <button type="button" onClick={() => setActivePage("status")}>📋 Status</button>
-      <button type="button" onClick={() => setActivePage("contacts")}>📞 Contacts</button>
-
-      {/* Logout button */}
-      <button type="button" className="vol-logout-btn" onClick={handleLogout}>
+      {/* Logout Button */}
+      <button
+        onClick={handleLogout}
+        className="vol-logout-btn"
+        type="button"
+      >
         🚪 Logout
       </button>
     </div>
   );
-};
+}
 
 export default Sidebar;

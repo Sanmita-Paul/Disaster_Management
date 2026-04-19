@@ -7,6 +7,7 @@ function Header(){
   const navigate = useNavigate();
 
   return (
+    <div className='homepage'>
     <header>
       <img src="/logo.png" alt="logo" className="logo" />
       <h1>Disaster Management</h1>
@@ -25,6 +26,7 @@ function Header(){
         Sign Up
       </button>
     </header>
+    </div>
   );
 }
 function AlertMessage(){

@@ -1,13 +1,15 @@
+import "./volunteer.css";
+
 const Alerts = () => {
   return (
-    <div className="page-container">
-      <h2>🚨 Assigned Tasks</h2>
+    <div className="vol-page-container">
+      <h2>🚨 Alerts</h2>
 
-      <div className="alert-card">
+      <div className="vol-alert-card">
         Flood relief task in Sector A
       </div>
 
-      <div className="alert-card">
+      <div className="vol-alert-card">
         Medical aid needed in Sector B
       </div>
     </div>

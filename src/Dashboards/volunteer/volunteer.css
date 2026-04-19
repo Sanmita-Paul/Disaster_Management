@@ -4,63 +4,65 @@ body {
   background: #f4f6f9;
 }
 
-/* DASHBOARD LAYOUT */
+/* ================= HEADER ================= */
+.vol-head-welcome {
+  background: linear-gradient(90deg, #0a1d4f,#143796, #1e4aa3);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  font-size: 26px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 25px;
+  height: 90px;
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.vol-logo {
+  width: 60px;
+  height: 60px;
+}
+
+/* ================= LAYOUT ================= */
 .vol-dashboard-container {
   display: flex;
-  min-height: 100vh;
+  height: calc(100vh - 90px);
 }
 
 .vol-dashboard-content {
   flex: 1;
-  padding: 30px;
+  padding: 25px;
+  overflow-y: auto;
 }
 
-/* HEADER */
-.vol-head-welcome {
-  background: linear-gradient(90deg, #0a1d4f,#143796, #1e4aa3);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-  margin-top: 0;
-  font-size: 32px;          
-  color: white;
-  font-family: "work sans", sans-serif;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 20px;            
-  height: 100px;            
-}
-
-.vol-logo {
-  width: 75px;              
-  height: 75px;
-  margin-left: 10px;
-}
-
-/* SIDEBAR */
+/* ================= SIDEBAR ================= */
 .vol-sidebar {
-  width: 230px;             
+  width: 220px;
   background: #0a1d4f;
   color: white;
-  padding: 25px;            
-  height: 100vh;
+  padding: 20px;
+  height: 100%;
 }
 
 .vol-sidebar-title {
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   text-align: center;
-  font-size: 1.6rem;         
+  font-size: 1.4rem;
 }
 
 .vol-sidebar button {
   width: 100%;
-  margin: 10px 0;
-  padding: 12px;             
+  margin: 8px 0;
+  padding: 10px;
   border: none;
   background: #102c7a;
   color: white;
   cursor: pointer;
   border-radius: 6px;
-  font-size: 1rem;          
+  font-size: 0.9rem;
   transition: 0.2s ease;
 }
 
@@ -68,80 +70,231 @@ body {
   background: #143796;
 }
 
-/* COMMON PAGE STYLING */
+/* ================= COMMON ================= */
 .vol-page-container {
-  padding: 20px;
+  padding: 5px;
 }
 
 .vol-page-container h2 {
-  margin-bottom: 20px;
-  font-size: 50px;        
+  margin-bottom: 15px;
+  font-size: 26px;
 }
 
-/* CARD STYLING */
+/* ================= CARD ================= */
 .vol-card {
   background: white;
-  padding: 18px;             
-  margin-bottom: 14px;
-  border-radius: 8px;
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  font-size: 50px;           
+  font-size: 15px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;               /* ✅ FIXED spacing */
+  line-height: 1.4;
+
+  width: 60%;
+  max-width: 600px;
 }
 
+.vol-card h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.vol-card p {
+  font-size: 14px;
+}
+
+/* ================= ALERT ================= */
 .vol-alert-card {
   background: #fff3cd;
-  padding: 14px;
+  padding: 12px;
   border-radius: 6px;
-  margin-bottom: 12px;
-  font-size: 0.95rem;
+  margin-bottom: 10px;
+  font-size: 14px;
 }
 
-/* HOME PAGE */
+/* ================= HOME ================= */
 .vol-home-container {
-  padding: 20px;
+  padding: 5px;
 }
 
 .vol-welcome-box {
   background: white;
-  padding: 20px;             
+  padding: 15px;
   border-radius: 10px;
-  margin-bottom: 35px;
+  margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  font-size: 1rem;
+  font-size: 14px;
 }
 
-/* TASK CARDS */
+/* ================= TASK GRID ================= */
 .vol-task-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
-  gap: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
 }
 
 .vol-task-card {
   background: white;
-  padding: 15px;             
+  padding: 12px;
   border-radius: 10px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.12);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  font-size: 1rem;
+  font-size: 14px;
+}
+
+.vol-task-card h3 {
+  font-size: 16px;
+}
+
+.vol-task-card p {
+  font-size: 13px;
 }
 
 .vol-task-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
   box-shadow: 0 6px 14px rgba(0,0,0,0.18);
 }
 
-/* STATUS BUTTON */
+/* ================= BUTTON ================= */
 .vol-status-btn {
-  padding: 10px 15px;        
+  margin-top: 12px;
+  padding: 10px 16px;
   background-color: #143796;
   border: none;
   color: white;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 14px;
+  align-self: flex-start;
 }
 
 .vol-status-btn:hover {
   background: #1e4aa3;
+}
+
+/* ================= FORM ================= */
+
+/* Labels */
+.vol-card label {
+  font-size: 13px;
+  margin-top: 6px;
+  margin-bottom: 2px;   /* ✅ FIXED gap */
+  color: #333;
+}
+
+/* Inputs */
+.vol-input {
+  width: 100%;
+  padding: 6px 8px;     /* ✅ tighter */
+  margin: 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  outline: none;
+}
+
+/* Focus effect */
+.vol-input:focus {
+  border-color: #143796;
+  box-shadow: 0 0 4px rgba(20, 55, 150, 0.3);
+}
+
+/* File inputs */
+.vol-file {
+  width: 100%;
+  padding: 4px;
+  margin: 0;
+  font-size: 13px;
+}
+
+/* Custom file button */
+input[type="file"]::file-selector-button {
+  background: #143796;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-right: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: #1e4aa3;
+}
+
+/* Dropdown */
+select.vol-input {
+  cursor: pointer;
+}
+/* ================= TABLE ================= */
+.vol-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.vol-table th,
+.vol-table td {
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.vol-table th {
+  background: #143796;
+  color: white;
+}
+
+.vol-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.vol-table tr:hover {
+  background: #eef2ff;
+}
+/* ================= APPLICATION STATUS ================= */
+
+.vol-status-card {
+  width: 100%;              /* 🔥 full width */
+  background: white;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+  transition: all 0.2s ease;
+}
+
+/* hover effect = makes it feel "alive" */
+.vol-status-card:hover {
+  transform: translateX(5px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+/* left content */
+.vol-status-left h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.vol-status-left p {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* optional subtle accent line */
+.vol-status-card {
+  border-left: 6px solid #143796;
 }

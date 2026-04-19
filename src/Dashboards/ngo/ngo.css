@@ -95,3 +95,398 @@ input, select{
   border: 2px solid black;
   border-radius: 4px;
 }
+/* Volunteer Requests container */
+.volunteer-requests {
+  padding: 20px;
+}
+
+.volunteer-requests h2 {
+  font-size: 22px;
+  margin-bottom: 16px;
+  color: #d24e01; /* orange accent */
+}
+
+/* Card list */
+.volunteer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Individual card */
+.volunteer-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 6px rgba(162, 61, 1, 0.25); /* subtle orange shadow */
+  border-left: 4px solid #d24e01; /* orange accent bar */
+  transition: transform 0.2s ease;
+}
+
+.volunteer-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Volunteer info */
+.volunteer-info h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.volunteer-info p {
+  margin: 4px 0;
+  color: #666;
+}
+
+.volunteer-info small {
+  color: #999;
+}
+
+/* Status badge */
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  min-width: 90px;
+  text-align: center;
+}
+
+.status-pending {
+  background: #fff3e0;
+  color: #d24e01; /* orange for pending */
+}
+
+.status-approved {
+  background: #e8f5e9;
+  color: #28a745; /* green for approved */
+}
+
+.status-rejected {
+  background: #ffebee;
+  color: #dc3545; /* red for rejected */
+}
+
+/* View More button */
+.view-btn {
+  background: #d24e01; /* orange button */
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 12px;
+  transition: background 0.2s ease;
+}
+
+.view-btn:hover {
+  background: #ff7a2f; /* lighter orange on hover */
+}
+
+/* Modal window styling */
+.volunteer-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(162, 61, 1, 0.3); /* orange shadow */
+  z-index: 1000;
+  width: 400px;
+  border-top: 6px solid #d24e01; /* orange accent bar */
+}
+
+.volunteer-modal h3 {
+  margin-top: 0;
+  color: #d24e01; /* orange heading */
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(162, 61, 1, 0.4); /* orange tinted overlay */
+  z-index: 999;
+}
+/* Home page */
+.ngo-home {
+  padding: 20px;
+}
+
+.ngo-home h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #d24e01; /* orange accent */
+}
+
+.home-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.home-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(162, 61, 1, 0.25); /* orange shadow */
+  border-top: 4px solid #d24e01;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.home-card:hover {
+  transform: translateY(-3px);
+}
+
+.home-card-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.home-card-value {
+  font-size: 22px;
+  font-weight: bold;
+  color: #a63d01;
+  margin: 8px 0;
+}
+
+.home-card-desc {
+  font-size: 14px;
+  color: #666;
+}
+/* Resource Form */
+.page-container {
+  padding: 20px;
+}
+
+.page-container h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #d24e01; /* orange accent */
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 2px 6px rgba(162, 61, 1, 0.25); /* subtle orange shadow */
+}
+.card-accent {
+  border-top: 4px solid #d24e01;
+}
+
+/* Form fields */
+.card form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* reduced spacing between fields */
+}
+
+.card label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1px; /* minimal space under labels */
+}
+
+.card input,
+.card select {
+  padding: 6px 8px; /* tighter padding inside fields */
+  border: 2px solid #d24e01;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+.card input:focus,
+.card select:focus {
+  border-color: #ff7a2f;
+  box-shadow: 0 0 2px rgba(255, 122, 47, 0.5); /* softer glow */
+}
+
+/* Suggestions dropdown */
+.suggestions {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: -6px; /* reduced spacing above suggestions */
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.suggestion-item {
+  padding: 6px 10px; /* slightly smaller padding */
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background: #ffede0;
+}
+
+/* Map styling */
+.leaflet-container {
+  border: 2px solid #d24e01;
+  border-radius: 8px;
+}
+
+/* Submit button */
+.resource-submit-btn {
+  background: #d24e01;
+  color: #fff;
+  padding: 8px 14px; /* slightly smaller button */
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.resource-submit-btn:hover {
+  background: #ff7a2f;
+}
+/* Task Form & Task Created */
+.task-form-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 28px;
+  box-shadow: 0 4px 10px rgba(162, 61, 1, 0.25);
+  border-left: 5px solid #d24e01; /* orange accent */
+  margin-bottom: 24px;
+  transition: transform 0.2s ease;
+}
+
+.task-form-card:hover {
+  transform: translateY(-2px);
+}
+
+.task-form-card h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #d24e01;
+  font-size: 20px;
+}
+
+.task-form-card label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.task-form-card input,
+.task-form-card textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #d24e01;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 14px;
+  outline: none;
+  resize: vertical;
+}
+
+.task-form-card input:focus,
+.task-form-card textarea:focus {
+  border-color: #ff7a2f;
+  box-shadow: 0 0 4px rgba(255, 122, 47, 0.5);
+}
+
+/* Buttons row */
+.task-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.task-actions button {
+  flex: 1;
+  padding: 10px 14px;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+/* Assigned volunteers list */
+.assigned-volunteers {
+  margin-top: 20px;
+  padding: 14px;
+  background: #fff8f3;
+  border: 1px solid #d24e01;
+  border-radius: 6px;
+}
+
+.assigned-volunteers h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #d24e01;
+}
+
+.assigned-volunteers ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.assigned-volunteers li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.assigned-volunteers li:last-child {
+  border-bottom: none;
+}
+/* Assign Volunteers button */
+.accept-btn {
+  background: linear-gradient(90deg, #28a745, #34d058); /* fresh green gradient */
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+}
+
+.accept-btn:hover {
+  background: linear-gradient(90deg, #218838, #2ebd4f); /* darker hover gradient */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(40, 167, 69, 0.4);
+}
+
+.accept-btn:active {
+  transform: translateY(0); /* reset on click */
+  box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+}
+/* Reject button */
+.reject-btn {
+  background: linear-gradient(90deg, #dc3545, #e05260); /* red gradient */
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
+}
+
+.reject-btn:hover {
+  background: linear-gradient(90deg, #c82333, #d94452); /* darker hover gradient */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.4);
+}
+
+.reject-btn:active {
+  transform: translateY(0); /* reset on click */
+  box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
+}

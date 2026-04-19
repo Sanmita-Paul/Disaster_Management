@@ -5,7 +5,8 @@ import MapView from "../../components/MapView";
 import Requests from "./Requests";
 import Resources from "./Resources";
 import Locations from "./Locations";
-import Contributions from "./Contributions";
+import VolunteerRequests from "./VolunteerRequest"; 
+import NGOHome from "./NGOHome";
 
 function Header_login(){
   return(
@@ -18,82 +19,52 @@ function Header_login(){
 
 const NGODashboard: React.FC = () => {
 
-  const [page, setPage] = useState<string>("requests");
+  const [page, setPage] = useState<string>("home");
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("role");
-
+    localStorage.clear();
     window.location.href = "/";
   };
 
   const renderPage = () => {
     switch(page){
-      case "requests":
-        return <Requests />;
-      case "resources":
-        return <Resources />;
-      case "locations":
-        return <Locations />;
-      case "contributions":
-        return <Contributions />;
-      case "map":
-        return <MapView role="NGO" />;
-      default:
-        return <Requests />;
+      case "home": return <NGOHome />;
+      case "requests": return <Requests />;
+      case "resources": return <Resources />;
+      case "locations": return <Locations />;
+      case "map": return <MapView role="NGO" />;
+      case "volunteerRequests": return <VolunteerRequests />;
+      default: return <Requests />;
     }
   };
 
   return (
-    <div>
+    <div className="ngo-app"> {/* ✅ FIXED WRAPPER */}
 
       <Header_login />
 
       <div className="ngo-dashboard-container">
 
-        {/* Sidebar */}
         <div className="ngo-sidebar">
-
           <h2>NGO Panel</h2>
 
-          <button onClick={() => setPage("requests")}>
-            🚨 Resource Requests
-          </button>
+          <button onClick={() => setPage("home")}>🏠 Home</button>
+          <button onClick={() => setPage("requests")}>🚨 Resource Requests</button>
+          <button onClick={() => setPage("resources")}>📦 Resource Form</button>
+          <button onClick={() => setPage("locations")}>📍 Locations</button>
+          <button onClick={() => setPage("map")}>🗺️ Map</button>
+          <button onClick={() => setPage("volunteerRequests")}>🙋 Volunteers</button>
 
-          <button onClick={() => setPage("resources")}>
-            📦 Resource Form
-          </button>
-
-          <button onClick={() => setPage("locations")}>
-            📍 Locations Needing Help
-          </button>
-
-          <button onClick={() => setPage("contributions")}>
-            📊 Track Contributions
-          </button>
-          
-          <button onClick={() => setPage("map")}>
-          🗺️ Map
-          </button>
-
-          {/* Logout */}
-          <button
-            className="logout-btn"
-            onClick={handleLogout}
-          >
+          <button className="logout-btn" onClick={handleLogout}>
             🚪 Logout
           </button>
-
         </div>
 
-        {/* Content */}
         <div className="ngo-content">
           {renderPage()}
         </div>
 
       </div>
-
     </div>
   );
 };

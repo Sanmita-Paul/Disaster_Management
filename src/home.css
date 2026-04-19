@@ -12,6 +12,7 @@ header{
     display:flex;
     gap: 20px;
     box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    align-items: center;
 }
 .logo{
   width: 69px;
@@ -19,15 +20,6 @@ header{
   margin-left: 10px;
 }
 
-header{
-    background: linear-gradient(to right, #3d0c02, #b92e34);
-    color: white;
-    font-family:"work sans", sans-serif;
-    padding: 12px;
-    display:flex;
-    gap: 20px;
-    align-items: center;   /* ✅ vertical alignment */
-}
 
 h1 {
   flex: 1;   /* ✅ pushes buttons to right */
