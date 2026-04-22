@@ -48,12 +48,12 @@ const Requests: React.FC = () => {
       }
 
       try {
-        const res = await fetch(`http://localhost:5000/api/ngo/${user.id}`);
+        const res = await fetch(`http://localhost:5000/api/get-ngo/${user.id}`)
         const data = await res.json();
-
-        if (data.ngo_id) {
-          setNgoId(data.ngo_id);
-        } else {
+        
+        if (data.id) {
+          setNgoId(data.id);
+        }else {
           alert("NGO not registered");
         }
       } catch (err) {
