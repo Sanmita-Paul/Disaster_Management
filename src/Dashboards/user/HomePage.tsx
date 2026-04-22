@@ -91,6 +91,7 @@ const HomePage: React.FC = () => {
             <div key={i} className="shelter-card">
               <h3>Shelter #{s.id}</h3>
               <p>NGO: {s.ngo_name}</p>
+              <p>Type: {s.resource_type}</p>
               <p>Quantity: {s.quantity}</p>
               <p>Distance: {s.distance.toFixed(2)} km</p>
             </div>
