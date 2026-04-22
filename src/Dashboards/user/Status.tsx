@@ -12,32 +12,40 @@ const Status: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchIncidents = async () => {
-      try {
-        const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const fetchIncidents = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-        if (!user.id) {
-          alert("User not logged in");
-          return;
-        }
-
-        const res = await fetch(
-          `http://localhost:5000/api/incidents/user/${user.id}`
-        );
-
-        const data = await res.json();
-        setIncidents(data);
-        setLoading(false);
-
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
+      if (!user.id) {
+        alert("User not logged in");
+        return;
       }
-    };
 
-    fetchIncidents();
-  }, []);
+      const res = await fetch("http://localhost:5000/api/incidents");
 
+      if (!res.ok) {
+        console.error(await res.text());
+        return;
+      }
+
+      const data = await res.json();
+
+      // ✅ FILTER HERE (IMPORTANT)
+      const userIncidents = data.filter(
+        (incident: any) => incident.user_id === user.id
+      );
+
+      setIncidents(userIncidents);
+
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchIncidents();
+}, []);
   return (
     <div className="page-container">
       <h2>Your Reports</h2>
