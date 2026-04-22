@@ -18,69 +18,94 @@ const VolunteerRequests: React.FC = () => {
   const [selectedVolunteer, setSelectedVolunteer] = useState<VolunteerRequest | null>(null);
 
   useEffect(() => {
-    // Replace with your actual data fetch (API or IndexedDB)
-    const sampleData: VolunteerRequest[] = [
-      {
-        id: 1,
-        name: "Amit Sharma",
-        age: 28,
-        gender: "Male",
-        aadhar: "1234-5678-9012",
-        idProofImage: "/images/idproof1.png",
-        volunteerImage: "/images/volunteer1.png",
-        skills: "Medical Aid",
-        status: "Pending",
-        date: "2026-04-16"
-      },
-      {
-        id: 2,
-        name: "Neha Verma",
-        age: 25,
-        gender: "Female",
-        aadhar: "9876-5432-1098",
-        idProofImage: "/images/idproof2.png",
-        volunteerImage: "/images/volunteer2.png",
-        skills: "Logistics",
-        status: "Approved",
-        date: "2026-04-15"
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+    const fetchData = async () => {
+      try {
+        // ✅ STEP 1: get correct NGO id
+        const ngoRes = await fetch(
+          `http://localhost:5000/api/get-ngo/${user.id}`
+        );
+        const ngoData = await ngoRes.json();
+
+        const ngoId = ngoData.id;
+
+        // ✅ STEP 2: fetch applications
+        const res = await fetch(
+          `http://localhost:5000/api/ngo-applications/${ngoId}`
+        );
+        const data = await res.json();
+
+        const formatted = data.map((item: any) => ({
+          id: item.application_id,
+          name: item.name,
+          age: item.age,
+          gender: item.gender,
+          aadhar: item.aadhaar_number,
+          idProofImage: "http://localhost:5000" + item.id_proof_url,
+          volunteerImage: "http://localhost:5000" + item.image_url,
+          skills: "N/A",
+          status:
+            item.status === "pending"
+              ? "Pending"
+              : item.status === "accepted"
+              ? "Approved"
+              : "Rejected",
+          date: item.applied_at
+        }));
+
+        setRequests(formatted);
+
+      } catch (err) {
+        console.error(err);
       }
-    ];
-    setRequests(sampleData);
+    };
+
+    fetchData();
   }, []);
 
-  const handleApprove = () => {
-    if (selectedVolunteer) {
-      setRequests(prev =>
-        prev.map(req =>
-          req.id === selectedVolunteer.id ? { ...req, status: "Approved" } : req
-        )
-      );
-      setSelectedVolunteer(null);
-    }
+  const handleApprove = async () => {
+    if (!selectedVolunteer) return;
+
+    await fetch("http://localhost:5000/api/update-application", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        applicationId: selectedVolunteer.id,
+        status: "accepted"
+      })
+    });
+
+    window.location.reload();
   };
 
-  const handleReject = () => {
-    if (selectedVolunteer) {
-      setRequests(prev =>
-        prev.map(req =>
-          req.id === selectedVolunteer.id ? { ...req, status: "Rejected" } : req
-        )
-      );
-      setSelectedVolunteer(null);
-    }
+  const handleReject = async () => {
+    if (!selectedVolunteer) return;
+
+    await fetch("http://localhost:5000/api/update-application", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        applicationId: selectedVolunteer.id,
+        status: "rejected"
+      })
+    });
+
+    window.location.reload();
   };
 
   return (
     <div className="volunteer-requests">
       <h2>🙋 Volunteer Requests</h2>
+
       <div className="volunteer-list">
         {requests.map(req => (
           <div key={req.id} className="volunteer-card">
             <div className="volunteer-info">
               <h3>{req.name}</h3>
-              <p>{req.skills}</p>
               <small>{req.date}</small>
             </div>
+
             <div>
               <span
                 className={`status-badge ${
@@ -93,6 +118,7 @@ const VolunteerRequests: React.FC = () => {
               >
                 {req.status}
               </span>
+
               <button
                 className="view-btn"
                 onClick={() => setSelectedVolunteer(req)}
@@ -104,32 +130,57 @@ const VolunteerRequests: React.FC = () => {
         ))}
       </div>
 
-      {/* Modal for volunteer details */}
       {selectedVolunteer && (
         <>
-          <div className="modal-overlay" onClick={() => setSelectedVolunteer(null)}></div>
+          <div
+            className="modal-overlay"
+            onClick={() => setSelectedVolunteer(null)}
+          ></div>
+
           <div className="volunteer-modal">
             <h3>{selectedVolunteer.name}</h3>
+
             <p><strong>Age:</strong> {selectedVolunteer.age}</p>
             <p><strong>Gender:</strong> {selectedVolunteer.gender}</p>
             <p><strong>Aadhaar:</strong> {selectedVolunteer.aadhar}</p>
-            <p><strong>Skills:</strong> {selectedVolunteer.skills}</p>
             <p><strong>Status:</strong> {selectedVolunteer.status}</p>
             <p><strong>Date:</strong> {selectedVolunteer.date}</p>
+
             <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
               <div>
                 <strong>ID Proof:</strong>
-                <img src={selectedVolunteer.idProofImage} alt="ID Proof" style={{ width: "100px", borderRadius: "6px" }} />
+                <img
+                  src={selectedVolunteer.idProofImage}
+                  alt="ID Proof"
+                  style={{ width: "100px", borderRadius: "6px" }}
+                />
               </div>
+
               <div>
                 <strong>Volunteer Image:</strong>
-                <img src={selectedVolunteer.volunteerImage} alt="Volunteer" style={{ width: "100px", borderRadius: "6px" }} />
+                <img
+                  src={selectedVolunteer.volunteerImage}
+                  alt="Volunteer"
+                  style={{ width: "100px", borderRadius: "6px" }}
+                />
               </div>
             </div>
+
             <div className="request-actions" style={{ marginTop: "20px" }}>
-              <button className="accept-btn" onClick={handleApprove}>Approve</button>
-              <button className="reject-btn" onClick={handleReject}>Decline</button>
-              <button className="view-btn" onClick={() => setSelectedVolunteer(null)}>Close</button>
+              <button className="accept-btn" onClick={handleApprove}>
+                Approve
+              </button>
+
+              <button className="reject-btn" onClick={handleReject}>
+                Decline
+              </button>
+
+              <button
+                className="view-btn"
+                onClick={() => setSelectedVolunteer(null)}
+              >
+                Close
+              </button>
             </div>
           </div>
         </>

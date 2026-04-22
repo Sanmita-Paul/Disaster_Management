@@ -96,9 +96,9 @@ const MapPage: React.FC<MapPageProps> = ({ role }) => {
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
         {/* 🔴 INCIDENTS */}
-        {(role === "Admin" || role === "NGO") &&
+        {(role === "Admin" || role === "NGO" || role === "Volunteer") &&
           incidents
-            .filter(d => d.latitude && d.longitude)
+            .filter(d => d.latitude !== null && d.longitude !== null)
             .map((d) => (
               <Marker
                 key={`inc-${d.id}`}
@@ -116,9 +116,9 @@ const MapPage: React.FC<MapPageProps> = ({ role }) => {
             ))}
 
        {/* 🟢 RESOURCES */}
-{(role === "Admin" || role === "NGO") &&
+{(role === "Admin" || role === "NGO" || role === "User" || role === "Volunteer") &&
   resources
-    .filter(r => r.latitude && r.longitude)
+    .filter(r => r.latitude !== null && r.longitude !== null)
     .map((r) => (
       <Marker
         key={`res-${r.id}`}
@@ -156,32 +156,6 @@ const MapPage: React.FC<MapPageProps> = ({ role }) => {
                 icon={blueIcon}
               >
                 <Popup>NGO: {n.name}</Popup>
-              </Marker>
-            ))}
-
-        {/* 🔴 VOLUNTEER */}
-        {role === "Volunteer" &&
-          incidents
-            .filter(d => d.latitude && d.longitude)
-            .map((d) => (
-              <Marker
-                key={d.id}
-                position={toLatLng(Number(d.latitude), Number(d.longitude))}
-                icon={redIcon}
-              >
-                <Popup>
-                  Critical Zone
-                  <br />
-                  <button
-                    onClick={() =>
-                      window.open(
-                        `https://www.google.com/maps/dir/?api=1&destination=${d.latitude},${d.longitude}`
-                      )
-                    }
-                  >
-                    Get Directions
-                  </button>
-                </Popup>
               </Marker>
             ))}
       </SafeMapContainer>

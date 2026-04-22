@@ -4,58 +4,46 @@ import "./volunteer.css";
 function ApplyNGO() {
   const [ngos, setNgos] = useState<any[]>([]);
 
-  // 🔁 SWITCH BETWEEN DUMMY & BACKEND
-  const USE_DUMMY = true;
-
   useEffect(() => {
-    if (USE_DUMMY) {
-      // ✅ DUMMY DATA
-      const dummyData = [
-        { id: "NGO101", name: "Red Cross", location: "Delhi" },
-        { id: "NGO102", name: "Helping Hands", location: "Mumbai" },
-        { id: "NGO103", name: "Care India", location: "Kolkata" }
-      ];
-
-      setNgos(dummyData);
-    } else {
-      // 🔗 BACKEND FETCH
-      fetch("http://localhost:5000/ngos")
-        .then(res => res.json())
-        .then(data => setNgos(data))
-        .catch(err => console.error(err));
-    }
+    fetch("http://localhost:5000/api/ngos")
+      .then(res => res.json())
+      .then(data => setNgos(data))
+      .catch(err => console.error(err));
   }, []);
 
-  const handleApply = async (ngoId: string) => {
-    // ✅ GET USER FROM LOCAL STORAGE
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    const volunteerId = user._id;
+ const handleApply = async (ngoId: string) => {
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-    if (USE_DUMMY) {
-      // 🧪 FRONTEND TEST MODE
-      alert(`✅ Applied to NGO: ${ngoId}`);
-      return;
-    }
+  try {
+    // ✅ STEP 1: get real volunteer.id
+    const volRes = await fetch(
+      `http://localhost:5000/api/get-volunteer/${user.id}`
+    );
+    const volData = await volRes.json();
 
-    try {
-      await fetch("http://localhost:5000/apply-ngo", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          volunteerId,
-          ngoId
-        })
-      });
+    const volunteerId = volData.id;
 
-      alert("✅ Applied successfully!");
-    } catch (err) {
-      console.error(err);
-      alert("❌ Application failed!");
-    }
-  };
+    // ✅ STEP 2: apply
+    const res = await fetch("http://localhost:5000/api/apply-ngo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        volunteerId,
+        ngoId: Number(ngoId) // ✅ ensure integer
+      })
+    });
 
+    if (!res.ok) throw new Error("Apply failed");
+
+    alert("✅ Applied successfully!");
+
+  } catch (err) {
+    console.error(err);
+    alert("❌ Application failed!");
+  }
+};
   return (
     <div className="vol-page-container">
       <h2>Apply to NGOs</h2>
@@ -65,7 +53,7 @@ function ApplyNGO() {
           <tr>
             <th>NGO ID</th>
             <th>Name</th>
-            <th>Location</th>
+            
             <th>Action</th>
           </tr>
         </thead>
@@ -82,7 +70,7 @@ function ApplyNGO() {
               <tr key={index}>
                 <td>{ngo.id}</td>
                 <td>{ngo.name}</td>
-                <td>{ngo.location}</td>
+                
                 <td>
                   <button
                     className="vol-status-btn"

@@ -29,7 +29,7 @@ const NGODashboard: React.FC = () => {
   const renderPage = () => {
     switch(page){
       case "home": return <NGOHome />;
-      case "requests": return <Requests />;
+     
       case "resources": return <Resources />;
       case "locations": return <Locations />;
       case "map": return <MapView role="NGO" />;
@@ -49,7 +49,6 @@ const NGODashboard: React.FC = () => {
           <h2>NGO Panel</h2>
 
           <button onClick={() => setPage("home")}>🏠 Home</button>
-          <button onClick={() => setPage("requests")}>🚨 Resource Requests</button>
           <button onClick={() => setPage("resources")}>📦 Resource Form</button>
           <button onClick={() => setPage("locations")}>📍 Locations</button>
           <button onClick={() => setPage("map")}>🗺️ Map</button>

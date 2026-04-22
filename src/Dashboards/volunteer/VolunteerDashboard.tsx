@@ -25,10 +25,11 @@ function VolunteerDashboard() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          userId: user._id,
-          location: coords,
-        }),
+       body: JSON.stringify({
+  user_id: user.id,   // ✅ correct key
+  lat: coords.lat,    // ✅ send separately
+  lng: coords.lng
+}),
       });
 
       console.log("📍 Location updated:", coords);
@@ -79,7 +80,7 @@ function VolunteerDashboard() {
       case "alerts":
         return <Alerts />;
       case "map":
-        return <MapView role="volunteer" />;
+        return <MapView role="Volunteer" />;
       default:
         return <Home />;
     }

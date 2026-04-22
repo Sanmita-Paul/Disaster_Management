@@ -28,11 +28,10 @@ function Signup_box(){
   const [aadhar, setAadhar] = useState("");
   const [location, setLocation] = useState<any>(null);
 
-  // FILES (not sent yet)
+  // FILES
   const [idFile, setIdFile] = useState<File | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
-  // ✅ FIXED LOCATION FUNCTION (PROMISE)
   const getLocation = () => {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
@@ -66,33 +65,41 @@ function Signup_box(){
     }
 
     try {
-      const payload: any = { name, email, password, role };
+      // ✅ USE FORMDATA (IMPORTANT)
+      const formData = new FormData();
 
-      // ✅ VOLUNTEER LOGIC WITH LOCATION CHECK
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("role", role);
+
       if (role === "volunteer") {
 
-        // ensure location is fetched
         if (!location) {
           try {
             await getLocation();
           } catch {
-            alert("Location is required for volunteers");
+            alert("Location is required");
             return;
           }
         }
 
-        payload.age = age;
-        payload.gender = gender;
-        payload.aadhar = aadhar;
-        payload.location = location;
+        formData.append("age", age);
+        formData.append("gender", gender);
+        formData.append("aadhaar_number", aadhar);
+
+        // ✅ send lat/lng separately
+        formData.append("latitude", location.lat);
+        formData.append("longitude", location.lng);
+
+        // ✅ FILES
+        if (idFile) formData.append("id_proof", idFile);
+        if (imageFile) formData.append("image", imageFile);
       }
 
       const response = await fetch("http://localhost:5000/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
+        body: formData // ❌ no JSON headers
       });
 
       const data = await response.json();
@@ -168,18 +175,17 @@ function Signup_box(){
 
         <label>Role</label>
         <select 
-  value={role}
-  onChange={(e)=>{
-    const selectedRole = e.target.value;
-    setRole(selectedRole);
+          value={role}
+          onChange={(e)=>{
+            const selectedRole = e.target.value;
+            setRole(selectedRole);
 
-    // ✅ trigger location popup immediately
-    if (selectedRole === "volunteer") {
-      getLocation();
-    }
-  }}
-  required
->
+            if (selectedRole === "volunteer") {
+              getLocation();
+            }
+          }}
+          required
+        >
           <option value="">Select Role</option>
           <option value="admin">Admin👨‍💼</option>
           <option value="user">User👥</option>
@@ -187,13 +193,11 @@ function Signup_box(){
           <option value="volunteer">Volunteer🦺</option>
         </select>
 
-        {/* 🔥 VOLUNTEER EXTRA FIELDS */}
         {role === "volunteer" && (
           <>
-            {/* ✅ LOCATION STATUS */}
             {!location && (
               <p style={{ color: "yellow", fontSize: "14px" }}>
-                📍 Location will be requested on submit
+                📍 Location will be requested
               </p>
             )}
 
