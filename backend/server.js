@@ -594,14 +594,26 @@ app.get("/api/available-volunteers/:ngoId", async (req, res) => {
 
 app.post("/api/assign-task", async (req, res) => {
   const { task_id, volunteer_ids } = req.body;
+  console.log("TASK ID RECEIVED:", task_id); // ✅ ADD HERE
+  console.log("VOLUNTEERS RECEIVED:", volunteer_ids); // (optional but useful)
+
+  console.log("ASSIGN REQUEST:", req.body);
+
+  if (!task_id) {
+    return res.status(400).json({ message: "task_id is required" });
+  }
+
+  if (!Array.isArray(volunteer_ids) || volunteer_ids.length === 0) {
+    return res.status(400).json({ message: "No volunteers provided" });
+  }
 
   try {
     for (let vid of volunteer_ids) {
       await pool.query(
         `INSERT INTO task_assignments 
-        (task_id, volunteer_id, status)
-        VALUES ($1,$2,'assigned')
-        ON CONFLICT (task_id, volunteer_id) DO NOTHING`,
+         (task_id, volunteer_id, status)
+         VALUES ($1,$2,'pending')
+         ON CONFLICT (task_id, volunteer_id) DO NOTHING`,
         [task_id, vid]
       );
     }
@@ -609,7 +621,7 @@ app.post("/api/assign-task", async (req, res) => {
     res.json({ message: "Volunteers assigned" });
 
   } catch (err) {
-    console.error(err);
+    console.error("ASSIGN ERROR:", err);
     res.status(500).json({ message: "Error assigning volunteers" });
   }
 });

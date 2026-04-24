@@ -3,7 +3,7 @@ import "./volunteer.css";
 
 function Tasks() {
   const [assignedTasks, setAssignedTasks] = useState<any[]>([]);
-  const [selectedTask, setSelectedTask] = useState<any>(null);
+  // const [selectedTask, setSelectedTask] = useState<any>(null);
 
   const [formData, setFormData] = useState({
     assignment_id: "",
@@ -45,7 +45,7 @@ function Tasks() {
         if (pendingTasks.length > 0) {
           const firstTask = pendingTasks[0];
 
-          setSelectedTask(firstTask);
+          // setSelectedTask(firstTask);
 
           setFormData({
             assignment_id: String(firstTask.assignment_id),
@@ -130,7 +130,7 @@ function Tasks() {
                 borderRadius: "6px"
               }}
               onClick={() => {
-                setSelectedTask(task);
+                // setSelectedTask(task);
 
                 setFormData({
                   assignment_id: String(task.assignment_id),
@@ -155,22 +155,13 @@ function Tasks() {
         </div>
       )}
 
-      {/* SELECTED TASK */}
-      {selectedTask && (
-        <div className="vol-card">
-          <h3>📌 Selected Task</h3>
-
-          <p>
-            <strong>Task ID:</strong> {selectedTask.task_id}
-          </p>
-          <p>
-            <strong>Description:</strong> {selectedTask.description}
-          </p>
-          <p>
-            <strong>Status:</strong> {selectedTask.assignment_status}
-          </p>
-        </div>
-      )}
+      {/* no TASKs */}
+      {assignedTasks.length === 0 && (
+  <div className="vol-card">
+    <h3>📌 Pending Tasks</h3>
+    <p style={{ color: "gray" }}>No pending tasks</p>
+  </div>
+)}
 
       {/* FORM */}
       <div className="vol-card">

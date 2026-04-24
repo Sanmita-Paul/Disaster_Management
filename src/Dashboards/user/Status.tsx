@@ -69,7 +69,6 @@ const Status: React.FC = () => {
   <p>
     Report: {item.report_id ? "Submitted ✅" : "Not submitted ❌"}
   </p>
-  <pre>{JSON.stringify(item, null, 2)}</pre>
 </div>
         ))
       )}

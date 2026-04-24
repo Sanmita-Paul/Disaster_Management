@@ -79,32 +79,43 @@ alert("Task created successfully");
 
   // ✅ ASSIGN VOLUNTEERS (same UI logic, backend integrated)
   const handleAssign = async () => {
-    const selected = allVolunteers.slice(0, numVolunteers);
-    setVolunteers(selected);
+  if (!taskId) {
+    alert("Task ID missing. Please create task first.");
+    return;
+  }
 
-    try {
-      setLoading(true);
+  if (numVolunteers <= 0) {
+    alert("Enter valid number of volunteers");
+    return;
+  }
 
-      await fetch("http://localhost:5000/api/assign-task", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          task_id: taskId,
-          volunteer_ids: selected.map((v) => v.id)
-        })
-      });
+  const selected = allVolunteers.slice(0, numVolunteers);
+  setVolunteers(selected);
 
-      alert(`Assigned ${selected.length} volunteers to task`);
+  try {
+    setLoading(true);
 
-    } catch (err) {
-      console.error(err);
-      alert("Error assigning volunteers");
-    } finally {
-      setLoading(false);
-    }
-  };
+    await fetch("http://localhost:5000/api/assign-task", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        task_id: taskId, // safe now
+        volunteer_ids: selected.map((v) => v.id)
+      })
+    });
+
+    alert(`Assigned ${selected.length} volunteers to task`);
+    
+
+  } catch (err) {
+    console.error(err);
+    alert("Error assigning volunteers");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="page-container">
