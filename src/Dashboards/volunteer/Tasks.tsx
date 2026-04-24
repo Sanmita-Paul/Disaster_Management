@@ -2,48 +2,67 @@ import { useState, useEffect } from "react";
 import "./volunteer.css";
 
 function Tasks() {
+  const [assignedTasks, setAssignedTasks] = useState<any[]>([]);
+  const [selectedTask, setSelectedTask] = useState<any>(null);
 
-  // 🟢 ASSIGNED TASK (FROM BACKEND LATER)
-  const [assignedTask, setAssignedTask] = useState<any>(null);
-
-  // 🟢 FORM STATE
   const [formData, setFormData] = useState({
-    taskId: "",
+    assignment_id: "",
     volunteerId: "",
-    disasterId: "",
-    status: "Pending",
+    status: "completed",
     report: null as File | null,
     images: [] as File[]
   });
 
-  // ✅ FETCH TASK (DUMMY FOR NOW)
   useEffect(() => {
-    // 🔥 Replace this with backend API later
-    const dummyTask = {
-      taskId: "T101",
-      disasterId: "D45",
-      description: "Rescue people from flooded area",
-      location: "Assam, India"
+    const fetchTask = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        console.log("LOGGED USER:", user);
+
+        // 1. get volunteer id
+        const res1 = await fetch(
+          `http://localhost:5000/api/get-volunteer/${user.id}`
+        );
+        const vol = await res1.json();
+        console.log("VOLUNTEER FROM API:", vol);
+
+        if (!vol?.id) return;
+
+        // 2. get tasks
+        const res2 = await fetch(
+          `http://localhost:5000/api/my-tasks/${vol.id}`
+        );
+        const tasks = await res2.json();
+        console.log("TASKS FROM API:", tasks);
+
+        // ✅ only pending tasks
+        const pendingTasks = tasks.filter(
+          (task: any) => task.assignment_status !== "completed"
+        );
+
+        setAssignedTasks(pendingTasks);
+
+        if (pendingTasks.length > 0) {
+          const firstTask = pendingTasks[0];
+
+          setSelectedTask(firstTask);
+
+          setFormData({
+            assignment_id: String(firstTask.assignment_id),
+            volunteerId: String(vol.id),
+            status: "completed",
+            report: null,
+            images: []
+          });
+        }
+      } catch (err) {
+        console.error("Error fetching tasks:", err);
+      }
     };
 
-    setAssignedTask(dummyTask);
-
-    // 🔥 AUTO-FILL FORM
-    setFormData((prev) => ({
-      ...prev,
-      taskId: dummyTask.taskId,
-      disasterId: dummyTask.disasterId
-    }));
-
+    fetchTask();
   }, []);
 
-  // 🟢 INPUT CHANGE
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  // 🟢 FILE CHANGE
   const handleFileChange = (e: any) => {
     const { name, files } = e.target;
 
@@ -54,14 +73,11 @@ function Tasks() {
     }
   };
 
-  // 🟢 SUBMIT
   const handleSubmit = async () => {
     const data = new FormData();
 
-    data.append("taskId", formData.taskId);
-    data.append("volunteerId", formData.volunteerId);
-    data.append("disasterId", formData.disasterId);
-    data.append("status", formData.status);
+    data.append("assignment_id", formData.assignment_id);
+    data.append("remarks", "done");
 
     if (formData.report) {
       data.append("report", formData.report);
@@ -72,71 +88,98 @@ function Tasks() {
     });
 
     try {
-      await fetch("http://localhost:5000/upload-task", {
-        method: "POST",
-        body: data
-      });
+      const res = await fetch(
+        "http://localhost:5000/complete-assignment",
+        {
+          method: "POST",
+          body: data
+        }
+      );
 
-      alert("✅ Uploaded successfully!");
-    } catch (error) {
-      console.error(error);
-      alert("❌ Upload failed!");
+      const result = await res.json();
+
+      if (res.ok) {
+        alert("✅ Task Completed Successfully!");
+        window.location.reload();
+      } else {
+        alert("❌ Failed: " + result.message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("❌ Network Error");
     }
   };
 
   return (
     <div className="vol-page-container">
-
       <h2>Task Submission</h2>
 
-      {/* 🔥 ASSIGNED TASK SECTION */}
-      {assignedTask && (
+      {/* TASK LIST */}
+      {assignedTasks.length > 0 && (
         <div className="vol-card">
-          <h3>📌 Assigned Task</h3>
+          <h3>📌 Pending Tasks</h3>
 
-          <p><strong>Task ID:</strong> {assignedTask.taskId}</p>
-          <p><strong>Disaster ID:</strong> {assignedTask.disasterId}</p>
-          <p><strong>Description:</strong> {assignedTask.description}</p>
-          <p><strong>Location:</strong> {assignedTask.location}</p>
+          {assignedTasks.map((task) => (
+            <div
+              key={task.assignment_id}
+              style={{
+                padding: "10px",
+                marginBottom: "10px",
+                border: "1px solid #ddd",
+                cursor: "pointer",
+                borderRadius: "6px"
+              }}
+              onClick={() => {
+                setSelectedTask(task);
+
+                setFormData({
+                  assignment_id: String(task.assignment_id),
+                  volunteerId: String(formData.volunteerId),
+                  status: "completed",
+                  report: null,
+                  images: []
+                });
+              }}
+            >
+              <p>
+                <strong>Task ID:</strong> {task.task_id}
+              </p>
+              <p>
+                <strong>Description:</strong> {task.description}
+              </p>
+              <p>
+                <strong>Status:</strong> {task.assignment_status}
+              </p>
+            </div>
+          ))}
         </div>
       )}
 
-      {/* 🟢 FORM */}
+      {/* SELECTED TASK */}
+      {selectedTask && (
+        <div className="vol-card">
+          <h3>📌 Selected Task</h3>
+
+          <p>
+            <strong>Task ID:</strong> {selectedTask.task_id}
+          </p>
+          <p>
+            <strong>Description:</strong> {selectedTask.description}
+          </p>
+          <p>
+            <strong>Status:</strong> {selectedTask.assignment_status}
+          </p>
+        </div>
+      )}
+
+      {/* FORM */}
       <div className="vol-card">
-
-        <label>Task ID</label>
+        <label>Assignment ID</label>
         <input
           className="vol-input"
-          name="taskId"
-          value={formData.taskId}
-          readOnly   // 🔥 auto-filled
+          value={formData.assignment_id}
+          readOnly
         />
-
-        <label>Volunteer ID</label>
-        <input
-          className="vol-input"
-          name="volunteerId"
-          placeholder="Enter Volunteer ID"
-          onChange={handleChange}
-        />
-
-        <label>Disaster ID</label>
-        <input
-          className="vol-input"
-          name="disasterId"
-          value={formData.disasterId}
-          readOnly   // 🔥 auto-filled
-        />
-
-        <label>Status</label>
-        <select
-          className="vol-input"
-          name="status"
-          onChange={handleChange}
-        >
-          <option>Pending</option>
-          <option>Completed</option>
-        </select>
 
         <label>Upload Report</label>
         <input
@@ -156,9 +199,8 @@ function Tasks() {
         />
 
         <button className="vol-status-btn" onClick={handleSubmit}>
-          Upload
+          Submit
         </button>
-
       </div>
     </div>
   );

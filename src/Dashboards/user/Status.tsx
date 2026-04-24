@@ -1,66 +1,76 @@
 import { useEffect, useState } from "react";
 
-interface Incident {
-  id: number;
-  disaster_type: string;
+interface StatusRow {
+  incident_id: number;
   description: string;
-  status: string;
+  disaster_type: string;
+  incident_status: string;
+  task_status: string;
+  assignment_status: string;
+  report_id: number | null;
 }
 
 const Status: React.FC = () => {
-  const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [data, setData] = useState<StatusRow[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  const fetchIncidents = async () => {
-    try {
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const fetchStatus = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-      if (!user.id) {
-        alert("User not logged in");
-        return;
+        if (!user.id) {
+          alert("User not logged in");
+          return;
+        }
+
+        const res = await fetch(
+          `http://localhost:5000/api/user-full-status/${user.id}`
+        );
+
+        if (!res.ok) {
+          console.error(await res.text());
+          return;
+        }
+
+        const result = await res.json();
+        setData(result);
+
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      const res = await fetch("http://localhost:5000/api/incidents");
+    fetchStatus();
+  }, []);
 
-      if (!res.ok) {
-        console.error(await res.text());
-        return;
-      }
-
-      const data = await res.json();
-
-      // ✅ FILTER HERE (IMPORTANT)
-      const userIncidents = data.filter(
-        (incident: any) => incident.user_id === user.id
-      );
-
-      setIncidents(userIncidents);
-
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchIncidents();
-}, []);
   return (
     <div className="page-container">
-      <h2>Your Reports</h2>
+      <h2>Your Full Status</h2>
 
       {loading ? (
         <p>Loading...</p>
-      ) : incidents.length === 0 ? (
-        <p>No reports yet</p>
+      ) : data.length === 0 ? (
+        <p>No records found</p>
       ) : (
-        incidents.map((d) => (
-          <div key={d.id} className="card">
-            <h3>{d.disaster_type}</h3>
-            <p>{d.description}</p>
-            <p>Status: {d.status}</p>
-          </div>
+        data.map((item, index) => (
+         <div key={index} className="card">
+  <h3>{item.disaster_type}</h3>
+  <p>{item.description}</p>
+
+  <p>Incident Status: {item.incident_status}</p>
+
+  {/* 👇 ADD THESE (or keep if already there, just ensure visible) */}
+  <p>Task Status: {item.task_status || "not assigned"}</p>
+<p>Assignment Status: {item.assignment_status || "not assigned"}</p>
+
+  <p>
+    Report: {item.report_id ? "Submitted ✅" : "Not submitted ❌"}
+  </p>
+  <pre>{JSON.stringify(item, null, 2)}</pre>
+</div>
         ))
       )}
     </div>

@@ -60,16 +60,15 @@ const TaskForm: React.FC<TaskFormProps> = ({
           priority: "medium"
         })
       });
+const data = await res.json();
 
-      const data = await res.json();
-
-      setTaskId(data.task_id); // ✅ UUID
-      alert("Task created successfully");
-      if (!data.task_id) {
+if (!data.task_id) {
   alert("Task creation failed");
   return;
 }
-
+    
+setTaskId(data.task_id); // ✅ now guaranteed
+alert("Task created successfully");
     } catch (err) {
       console.error(err);
       alert("Error creating task");

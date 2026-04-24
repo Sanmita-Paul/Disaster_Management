@@ -363,10 +363,11 @@ app.get("/api/map-data", async (req, res) => {
       response.incidents = incidents.rows;
       response.resources = resources.rows;
     } 
-    else if (normalizedRole === "volunteer") {
-      response.incidents = incidents.rows;
-      response.resources = resources.rows;
-    }
+   else if (normalizedRole === "volunteer") {
+  // volunteers should NOT see all incidents/resources blindly
+  response.incidents = incidents.rows.filter(i => i.status !== "resolved");
+  response.resources = resources.rows;
+}
 
     res.json(response);
 
@@ -551,17 +552,17 @@ app.post("/api/tasks", async (req, res) => {
       `INSERT INTO tasks 
       (incident_id, ngo_id, description, priority, status)
       VALUES ($1,$2,$3,$4,'pending')
-      RETURNING *`,
+      RETURNING task_id, incident_id, ngo_id, description, priority, status`,
       [incident_id, ngo_id, description, priority]
     );
 
-    res.json(result.rows[0]);
-
+    res.json(result.rows[0]); // ✅ will include task_id
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error creating task" });
   }
 });
+
 
 app.get("/api/available-volunteers/:ngoId", async (req, res) => {
   const ngoId = parseInt(req.params.ngoId); // ✅ force integer
@@ -610,6 +611,173 @@ app.post("/api/assign-task", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error assigning volunteers" });
+  }
+});
+// ================= COMPLETE ASSIGNMENT ================= //
+
+app.post(
+  "/complete-assignment",
+  upload.fields([
+    { name: "report", maxCount: 1 },
+    { name: "images", maxCount: 5 }
+  ]),
+  async (req, res) => {
+
+    const { assignment_id, remarks } = req.body;
+    console.log("assignment_id:", assignment_id);
+
+    try {
+
+      // ✅ 1. CHECK ASSIGNMENT EXISTS + STATUS
+      const incidentCheck = await pool.query(
+        `SELECT * FROM task_assignments WHERE assignment_id = $1`,
+        [assignment_id]
+      );
+
+      console.log("ASSIGNMENT CHECK:", incidentCheck.rows);
+
+      if (incidentCheck.rows.length === 0) {
+        return res.status(404).json({ message: "Assignment not found" });
+      }
+
+      if (incidentCheck.rows[0].status === "completed") {
+        return res.json({ message: "Already completed" });
+      }
+
+      // file path
+      const proof_url = req.files?.report
+        ? `/uploads/${req.files.report[0].filename}`
+        : null;
+
+      // 2. save report
+      await pool.query(
+        `INSERT INTO reports (assignment_id, proof_url, remarks)
+         VALUES ($1,$2,$3)`,
+        [assignment_id, proof_url, remarks]
+      );
+
+      // 3. get incident id
+      const result = await pool.query(`
+        SELECT t.incident_id
+        FROM task_assignments ta
+        JOIN tasks t ON ta.task_id = t.task_id
+        WHERE ta.assignment_id = $1
+      `, [assignment_id]);
+
+      if (result.rows.length > 0) {
+        await pool.query(
+          `UPDATE incident SET status = 'resolved' WHERE id = $1`,
+          [result.rows[0].incident_id]
+        );
+      }
+
+      // 4. get task_id
+      const taskRes = await pool.query(
+        `SELECT task_id FROM task_assignments WHERE assignment_id = $1`,
+        [assignment_id]
+      );
+
+      if (taskRes.rows.length > 0) {
+        const task_id = taskRes.rows[0].task_id;
+
+        await pool.query(
+          `UPDATE tasks SET status = 'completed' WHERE task_id = $1`,
+          [task_id]
+        );
+      }
+
+      // 5. update assignment
+      await pool.query(
+        `UPDATE task_assignments
+         SET status = 'completed'
+         WHERE assignment_id = $1`,
+        [assignment_id]
+      );
+
+      res.json({ message: "Completed" });
+
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Error" });
+    }
+  }
+);
+// ================= USER FULL STATUS ================= //
+
+app.get("/api/user-full-status/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const result = await pool.query(`
+      SELECT 
+  i.id as incident_id,
+  i.description,
+  i.disaster_type,
+  i.status as incident_status,
+
+  t.task_id,
+  t.status as task_status,
+
+  ta.assignment_id,
+  ta.status as assignment_status,
+
+  r.report_id
+
+FROM incident i
+LEFT JOIN tasks t ON i.id = t.incident_id
+LEFT JOIN task_assignments ta ON t.task_id = ta.task_id
+LEFT JOIN reports r ON ta.assignment_id = r.assignment_id
+WHERE i.user_id = $1
+ORDER BY i.id DESC, ta.assignment_id DESC;
+    `, [userId]);
+
+    // 🔥 REMOVE DUPLICATES HERE (IMPORTANT)
+   const map = new Map();
+
+result.rows.forEach(row => {
+  const id = row.incident_id;
+
+  map.set(id, {
+    incident_id: row.incident_id,
+    description: row.description,
+    disaster_type: row.disaster_type,
+    incident_status: row.incident_status,
+    task_status: row.task_status ?? "not assigned",
+    assignment_status: row.assignment_status ?? "not assigned",
+    report_id: row.report_id
+  });
+});
+
+    res.json([...map.values()]);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error fetching full status" });
+  }
+});
+// ================= MY TASKS (FIX) =================
+app.get("/api/my-tasks/:volunteerId", async (req, res) => {
+  const { volunteerId } = req.params;
+
+  try {
+    const result = await pool.query(`
+  SELECT 
+    ta.assignment_id,
+    ta.status AS assignment_status,
+    t.task_id,
+    t.description,
+    t.status AS task_status
+  FROM task_assignments ta
+  JOIN tasks t ON ta.task_id = t.task_id
+  WHERE ta.volunteer_id = $1
+  ORDER BY ta.assignment_id DESC
+`, [volunteerId]);
+
+    res.json(result.rows);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error fetching tasks" });
   }
 });
 // ================= STATS ================= //
