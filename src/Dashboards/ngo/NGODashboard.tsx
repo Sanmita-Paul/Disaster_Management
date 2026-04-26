@@ -51,6 +51,7 @@ const NGODashboard: React.FC = () => {
           <button onClick={() => setPage("home")}>🏠 Home</button>
           <button onClick={() => setPage("resources")}>📦 Resource Form</button>
           <button onClick={() => setPage("locations")}>📍 Locations</button>
+          <button onClick={() => setPage("alltasks")}>📍 Task Status</button>
           <button onClick={() => setPage("map")}>🗺️ Map</button>
           <button onClick={() => setPage("volunteerRequests")}>🙋 Volunteers</button>
 

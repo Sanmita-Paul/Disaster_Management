@@ -3,39 +3,32 @@ import "./volunteer.css";
 
 function Tasks() {
   const [assignedTasks, setAssignedTasks] = useState<any[]>([]);
-  // const [selectedTask, setSelectedTask] = useState<any>(null);
 
   const [formData, setFormData] = useState({
     assignment_id: "",
     volunteerId: "",
     status: "completed",
     report: null as File | null,
-    images: [] as File[]
+    proof: null as File | null   // ✅ ADDED
   });
 
   useEffect(() => {
     const fetchTask = async () => {
       try {
         const user = JSON.parse(localStorage.getItem("user") || "{}");
-        console.log("LOGGED USER:", user);
 
-        // 1. get volunteer id
         const res1 = await fetch(
           `http://localhost:5000/api/get-volunteer/${user.id}`
         );
         const vol = await res1.json();
-        console.log("VOLUNTEER FROM API:", vol);
 
         if (!vol?.id) return;
 
-        // 2. get tasks
         const res2 = await fetch(
           `http://localhost:5000/api/my-tasks/${vol.id}`
         );
         const tasks = await res2.json();
-        console.log("TASKS FROM API:", tasks);
 
-        // ✅ only pending tasks
         const pendingTasks = tasks.filter(
           (task: any) => task.assignment_status !== "completed"
         );
@@ -45,14 +38,12 @@ function Tasks() {
         if (pendingTasks.length > 0) {
           const firstTask = pendingTasks[0];
 
-          // setSelectedTask(firstTask);
-
           setFormData({
             assignment_id: String(firstTask.assignment_id),
             volunteerId: String(vol.id),
             status: "completed",
             report: null,
-            images: []
+            proof: null   // ✅ CHANGED
           });
         }
       } catch (err) {
@@ -66,8 +57,8 @@ function Tasks() {
   const handleFileChange = (e: any) => {
     const { name, files } = e.target;
 
-    if (name === "images") {
-      setFormData({ ...formData, images: Array.from(files) });
+    if (name === "proof") {
+      setFormData({ ...formData, proof: files[0] }); // ✅ NEW
     } else {
       setFormData({ ...formData, report: files[0] });
     }
@@ -79,13 +70,13 @@ function Tasks() {
     data.append("assignment_id", formData.assignment_id);
     data.append("remarks", "done");
 
+    if (formData.proof) {
+      data.append("proof", formData.proof); // ✅ NEW
+    }
+
     if (formData.report) {
       data.append("report", formData.report);
     }
-
-    formData.images.forEach((img) => {
-      data.append("images", img);
-    });
 
     try {
       const res = await fetch(
@@ -114,7 +105,6 @@ function Tasks() {
     <div className="vol-page-container">
       <h2>Task Submission</h2>
 
-      {/* TASK LIST */}
       {assignedTasks.length > 0 && (
         <div className="vol-card">
           <h3>📌 Pending Tasks</h3>
@@ -130,40 +120,30 @@ function Tasks() {
                 borderRadius: "6px"
               }}
               onClick={() => {
-                // setSelectedTask(task);
-
                 setFormData({
                   assignment_id: String(task.assignment_id),
                   volunteerId: String(formData.volunteerId),
                   status: "completed",
                   report: null,
-                  images: []
+                  proof: null   // ✅ CHANGED
                 });
               }}
             >
-              <p>
-                <strong>Task ID:</strong> {task.task_id}
-              </p>
-              <p>
-                <strong>Description:</strong> {task.description}
-              </p>
-              <p>
-                <strong>Status:</strong> {task.assignment_status}
-              </p>
+              <p><strong>Task ID:</strong> {task.task_id}</p>
+              <p><strong>Description:</strong> {task.description}</p>
+              <p><strong>Status:</strong> {task.assignment_status}</p>
             </div>
           ))}
         </div>
       )}
 
-      {/* no TASKs */}
       {assignedTasks.length === 0 && (
-  <div className="vol-card">
-    <h3>📌 Pending Tasks</h3>
-    <p style={{ color: "gray" }}>No pending tasks</p>
-  </div>
-)}
+        <div className="vol-card">
+          <h3>📌 Pending Tasks</h3>
+          <p style={{ color: "gray" }}>No pending tasks</p>
+        </div>
+      )}
 
-      {/* FORM */}
       <div className="vol-card">
         <label>Assignment ID</label>
         <input
@@ -172,19 +152,20 @@ function Tasks() {
           readOnly
         />
 
-        <label>Upload Report</label>
+        {/* ✅ NEW FIELD */}
+        <label>Upload Proof (image/pdf)</label>
         <input
           type="file"
-          name="report"
+          name="proof"
           className="vol-file"
           onChange={handleFileChange}
         />
 
-        <label>Upload Images</label>
+        {/* existing */}
+        <label>Upload Report</label>
         <input
           type="file"
-          name="images"
-          multiple
+          name="report"
           className="vol-file"
           onChange={handleFileChange}
         />

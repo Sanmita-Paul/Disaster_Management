@@ -13,7 +13,18 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    // ✅ report must be PDF
+    if (file.fieldname === "report") {
+      if (file.mimetype !== "application/pdf") {
+        return cb(new Error("Only PDF allowed for report"), false);
+      }
+    }
+    cb(null, true);
+  }
+});
 const app = express();
 
 app.use(cors());
@@ -630,87 +641,97 @@ app.post("/api/assign-task", async (req, res) => {
 app.post(
   "/complete-assignment",
   upload.fields([
-    { name: "report", maxCount: 1 },
-    { name: "images", maxCount: 5 }
+    { name: "proof", maxCount: 1 },   // image OR pdf
+    { name: "report", maxCount: 1 }   // only pdf
   ]),
   async (req, res) => {
 
     const { assignment_id, remarks } = req.body;
-    console.log("assignment_id:", assignment_id);
 
     try {
-
-      // ✅ 1. CHECK ASSIGNMENT EXISTS + STATUS
-      const incidentCheck = await pool.query(
+      // ✅ check assignment
+      const check = await pool.query(
         `SELECT * FROM task_assignments WHERE assignment_id = $1`,
         [assignment_id]
       );
 
-      console.log("ASSIGNMENT CHECK:", incidentCheck.rows);
-
-      if (incidentCheck.rows.length === 0) {
+      if (check.rows.length === 0) {
         return res.status(404).json({ message: "Assignment not found" });
       }
 
-      if (incidentCheck.rows[0].status === "completed") {
+      if (check.rows[0].status === "completed") {
         return res.json({ message: "Already completed" });
       }
 
-      // file path
-      const proof_url = req.files?.report
-        ? `/uploads/${req.files.report[0].filename}`
+      // ✅ get files
+      const proofFile = req.files?.proof?.[0];
+      const reportFile = req.files?.report?.[0];
+
+      const proof_url = proofFile
+        ? `/uploads/${proofFile.filename}`
         : null;
 
-      // 2. save report
+      const report_pdf_url = reportFile
+        ? `/uploads/${reportFile.filename}`
+        : null;
+
+      // ✅ insert report
       await pool.query(
-        `INSERT INTO reports (assignment_id, proof_url, remarks)
-         VALUES ($1,$2,$3)`,
-        [assignment_id, proof_url, remarks]
+        `INSERT INTO reports (assignment_id, proof_url, report_pdf_url, remarks)
+         VALUES ($1,$2,$3,$4)`,
+        [assignment_id, proof_url, report_pdf_url, remarks]
       );
 
-      // 3. get incident id
-      const result = await pool.query(`
-        SELECT t.incident_id
-        FROM task_assignments ta
-        JOIN tasks t ON ta.task_id = t.task_id
-        WHERE ta.assignment_id = $1
-      `, [assignment_id]);
-
-      if (result.rows.length > 0) {
-        await pool.query(
-          `UPDATE incident SET status = 'resolved' WHERE id = $1`,
-          [result.rows[0].incident_id]
-        );
-      }
-
-      // 4. get task_id
-      const taskRes = await pool.query(
-        `SELECT task_id FROM task_assignments WHERE assignment_id = $1`,
+      // ✅ mark assignment completed
+      await pool.query(
+        `UPDATE task_assignments SET status = 'completed' WHERE assignment_id = $1`,
         [assignment_id]
       );
 
-      if (taskRes.rows.length > 0) {
-        const task_id = taskRes.rows[0].task_id;
+    // ✅ get task_id
+const taskRes = await pool.query(
+  `SELECT task_id FROM task_assignments WHERE assignment_id = $1`,
+  [assignment_id]
+);
 
-        await pool.query(
-          `UPDATE tasks SET status = 'completed' WHERE task_id = $1`,
-          [task_id]
-        );
-      }
+if (taskRes.rows.length > 0) {
+  const task_id = taskRes.rows[0].task_id;
 
-      // 5. update assignment
+  // 🔥 check if ANY assignment still pending
+  const pendingCheck = await pool.query(
+    `SELECT * FROM task_assignments 
+     WHERE task_id = $1 AND status != 'completed'`,
+    [task_id]
+  );
+
+  // ✅ ONLY if all completed
+  if (pendingCheck.rows.length === 0) {
+
+    // mark task completed
+    await pool.query(
+      `UPDATE tasks SET status = 'completed' WHERE task_id = $1`,
+      [task_id]
+    );
+
+    // resolve incident
+    const incRes = await pool.query(
+      `SELECT incident_id FROM tasks WHERE task_id = $1`,
+      [task_id]
+    );
+
+    if (incRes.rows.length > 0) {
       await pool.query(
-        `UPDATE task_assignments
-         SET status = 'completed'
-         WHERE assignment_id = $1`,
-        [assignment_id]
+        `UPDATE incident SET status = 'resolved' WHERE id = $1`,
+        [incRes.rows[0].incident_id]
       );
-
-      res.json({ message: "Completed" });
+    }
+  }
+}
+      res.json({ message: "✅ Task completed successfully" });
 
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: "Error" });
+      res.status(500).json({ message: "Error completing task" });
     }
   }
 );
@@ -790,6 +811,54 @@ app.get("/api/my-tasks/:volunteerId", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error fetching tasks" });
+  }
+});
+app.get("/api/ngo-tasks/:ngoId", async (req, res) => {
+  const { ngoId } = req.params;
+
+  try {
+    const result = await pool.query(`
+      SELECT 
+        t.task_id,
+        t.description,
+        t.priority,
+        t.status AS task_status,
+
+        ta.assignment_id,
+        ta.status AS assignment_status,
+
+        v.id AS volunteer_id,
+        u.name AS volunteer_name,
+
+        r.report_id,
+        r.proof_url,
+        r.report_pdf_url,   -- ✅ ADD THIS LINE
+        r.remarks,
+        r.submitted_at
+
+      FROM tasks t
+
+      LEFT JOIN task_assignments ta 
+        ON t.task_id = ta.task_id
+
+      LEFT JOIN volunteer v 
+        ON ta.volunteer_id = v.id
+
+      LEFT JOIN users u 
+        ON v.user_id = u.id
+
+      LEFT JOIN reports r 
+        ON ta.assignment_id = r.assignment_id
+
+      WHERE t.ngo_id = $1
+      ORDER BY t.task_id DESC
+    `, [ngoId]);
+
+    res.json(result.rows);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error fetching NGO tasks" });
   }
 });
 // ================= STATS ================= //
