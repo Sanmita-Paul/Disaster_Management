@@ -1,0 +1,25 @@
+.map_title {
+  font-size: 28px;
+  font-family: "Work Sans", sans-serif;
+}
+
+/* role-based colors */
+.volunteer {
+  color: #143796 !important;
+}
+
+.admin {
+  color: red;
+}
+
+.ngo {
+  color: blue;
+}
+
+.user{
+  color: #0F5132 !important;
+}
+.map_wrapper{
+    border: 2px solid black;
+    border-radius: 8px;
+}

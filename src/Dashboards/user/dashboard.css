@@ -6,7 +6,7 @@ body {
 
 .dashboard-container {
   display: flex;
-  min-height: 100vh;
+  height: calc(100vh - 90px);
 }
 
 .sidebar {
@@ -14,11 +14,16 @@ body {
   background: #0F5132;
   color: white;
   padding: 20px;
+  position: sticky;
+  top: 0;                     /* sticks under header */
+  height: calc(100vh - 90px); /* 👈 match container */
+  overflow-y: auto;
 }
 
 .dashboard-content {
   flex: 1;
   padding: 30px;
+  overflow-y: auto;   /* 👈 only this scrolls */
 }
 
 .sidebar-title {
@@ -40,27 +45,103 @@ body {
   background:  #58BB43;
 }
 
-/* Pages */
+/* ================= REPORT PAGE ================= */
 
-.page-container h2 {
+/* Page background + centering */
+.report_page {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;    
+  background: linear-gradient(135deg, #edf7f1, #dff5e3);
+  padding: 50px;
+  overflow: hidden;
+}
+
+/* Card container */
+.report_card {
+  width: 100%;
+  max-width: 450px;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  border-top: 5px solid #198754;
+}
+
+/* Title */
+.report_title {
+  text-align: center;
   margin-bottom: 20px;
+  color: #0F5132;
+  font-size: 24px;
+  font-weight: 600;
 }
 
-/* Form */
-
-.report-form input {
-  padding: 10px;
-  margin-right: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+/* Form layout */
+.report_form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.report-form button {
-  padding: 10px 15px;
-  background: #58BB43;
-  border: none;
+/* Labels */
+.report_form label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+/* Inputs */
+.report_form input,
+.report_form textarea,
+.report_form select {
+  padding: 10px 12px;
+  border: 2px solid #198754;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+/* Focus effect */
+.report_form input:focus,
+.report_form textarea:focus,
+.report_form select:focus {
+  border-color: #58BB43;
+  box-shadow: 0 0 5px rgba(88, 187, 67, 0.4);
+}
+
+/* Textarea */
+.report_form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Button */
+.report_form button {
+  margin-top: 10px;
+  padding: 12px;
+  background: linear-gradient(90deg, #0F5132, #198754, #58BB43);
   color: white;
-  border-radius: 6px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* Hover */
+.report_form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(25, 135, 84, 0.3);
+}
+
+/* Disabled */
+.report_form button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
 
 /* Cards */
@@ -120,9 +201,16 @@ body {
 .shelter-card {
   background: white;
   padding: 18px;
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.12);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.25s ease;
+
+  border-top: 4px solid #198754;
+}
+
+.shelter-card:hover {
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.18);
 }
 
 .shelter-card h3 {
@@ -134,6 +222,15 @@ body {
   box-shadow: 0 6px 14px rgba(0,0,0,0.18);
 }
 
+.distance_text {
+  font-weight: 600;
+  color: #58BB43;
+}
+
+.ngo_name {
+  font-weight: 600;
+  color: #198754;
+}
 /*HEADER*/
 .head_welcome{
   background: linear-gradient(90deg, #0F5132, #198754, #58BB43);
@@ -147,10 +244,170 @@ body {
   gap: 15px;
   padding: 15px;
   height: 90px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .logo{
   width: 69px;
   height: 65px;
   margin-left: 10px;
+}
+/* ================= CONTACTS PAGE ================= */
+
+.contacts_page {
+  padding: 30px;
+}
+
+.contacts_page h2 {
+  margin-bottom: 20px;
+  color: #0F5132;
+}
+
+/* Contact card styling */
+.contact_card {
+  background: white;
+  padding: 18px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+
+  border-left: 5px solid #198754;
+  transition: 0.2s;
+}
+
+.contact_card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+.contact_card h3 {
+  margin: 0;
+  color: #0F5132;
+}
+
+.contact_card p {
+  margin-top: 6px;
+  color: #555;
+  font-weight: 500;
+}
+
+/* ================= STATUS PAGE ================= */
+
+.status_page {
+  padding: 30px;
+}
+
+.status_page h2 {
+  margin-bottom: 20px;
+  color: #0F5132;
+}
+
+/* Card */
+.status_card {
+  background: white;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+
+  border-left: 5px solid #198754;
+  transition: 0.2s;
+}
+
+/* Hover effect */
+.status_card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+/* Title */
+.status_card h3 {
+  margin: 0;
+  color: #0F5132;
+}
+
+/* Text */
+.status_card p {
+  margin: 6px 0;
+  color: #555;
+}
+
+/* Status highlights */
+.status_good {
+  color: #198754;
+  font-weight: 600;
+}
+
+.status_bad {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.status_pending {
+  color: #ffc107;
+  font-weight: 600;
+}
+/* ================= NEARBY PAGE ================= */
+
+.nearby_page {
+  padding: 30px;
+}
+
+.nearby_page h2 {
+  margin-bottom: 20px;
+  color: #0F5132;
+}
+
+/* Card */
+.nearby_card {
+  background: white;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+
+  border-left: 5px solid #198754;
+  transition: 0.2s;
+}
+
+/* Hover */
+.nearby_card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+/* Title */
+.nearby_card h3 {
+  margin: 0;
+  color: #0F5132;
+}
+
+/* Text */
+.nearby_card p {
+  margin: 6px 0;
+  color: #555;
+}
+
+/* Distance highlight */
+.nearby_distance {
+  font-weight: 600;
+  color: #198754;
+}
+
+/* Severity colors */
+.severity_low {
+  color: #58BB43;
+  font-weight: 600;
+}
+
+.severity_medium {
+  color: #ffc107;
+  font-weight: 600;
+}
+
+.severity_high {
+  color: #dc3545;
+  font-weight: 600;
 }

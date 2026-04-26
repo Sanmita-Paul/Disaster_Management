@@ -331,12 +331,6 @@ input, select{
   background: #ffede0;
 }
 
-/* Map styling */
-.leaflet-container {
-  border: 2px solid #d24e01;
-  border-radius: 8px;
-}
-
 /* Submit button */
 .resource-submit-btn {
   background: #d24e01;

@@ -13,14 +13,14 @@ function Header(){
       <h1>Disaster Management</h1>
 
       <button 
-        className="login-btn"
+        className="login_btn"
         onClick={() => navigate("/login")}
       >
         Login
       </button>
 
       <button 
-        className="signup-btn"
+        className="signup_btn"
         onClick={() => navigate("/signup")}
       >
         Sign Up
@@ -31,8 +31,8 @@ function Header(){
 }
 function AlertMessage(){
     return(
-        <div className="alert-bar">
-            <p className="marquee-text">
+        <div className="alert_bar">
+            <p className="marquee_text">
             🚨 Flood Alert: Heavy rainfall expected in coastal areas 🚨
             </p>
         </div>
@@ -68,18 +68,18 @@ function Slideshow() {
 
   //JSX UI
   return (
-    <div className="slideshow-wrapper">
+    <div className="slideshow_wrapper">
   <img
     src={images[current]}
     alt="slideshow"
-    className="slide-image"
+    className="slide_image"
   />
 
-  <button className="nav-btn prev" onClick={prevSlide}>
+  <button className="nav_btn prev" onClick={prevSlide}>
     ‹
   </button>
 
-  <button className="nav-btn next" onClick={nextSlide}>
+  <button className="nav_btn next" onClick={nextSlide}>
     ›
   </button>
 </div>
@@ -97,7 +97,7 @@ function Footer(){
 
 export function Home() {
   return (
-    <div className="page-container">
+    <div className="page_container">
       <Header />
       <AlertMessage />
       <Slideshow />

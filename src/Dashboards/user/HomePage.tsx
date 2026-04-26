@@ -90,10 +90,19 @@ const HomePage: React.FC = () => {
           {shelters.slice(0, 5).map((s, i) => (
             <div key={i} className="shelter-card">
               <h3>Shelter #{s.id}</h3>
-              <p>NGO: {s.ngo_name}</p>
+              <p>
+  NGO: <span className="ngo_name">{s.ngo_name}</span>
+</p>
+
+<p>
+  Distance:{" "}
+  <span className="distance_text">
+    {s.distance.toFixed(2)} km
+  </span>
+</p>
               <p>Type: {s.resource_type}</p>
               <p>Quantity: {s.quantity}</p>
-              <p>Distance: {s.distance.toFixed(2)} km</p>
+              
             </div>
           ))}
 

@@ -47,7 +47,7 @@ const Status: React.FC = () => {
   }, []);
 
   return (
-    <div className="page-container">
+    <div className="status_page">
       <h2>Your Full Status</h2>
 
       {loading ? (
@@ -56,11 +56,20 @@ const Status: React.FC = () => {
         <p>No records found</p>
       ) : (
         data.map((item, index) => (
-         <div key={index} className="card">
+         <div key={index} className="status_card">
   <h3>{item.disaster_type}</h3>
   <p>{item.description}</p>
 
-  <p>Incident Status: {item.incident_status}</p>
+  <p>
+  Incident Status:{" "}
+  <span className={
+    item.incident_status === "resolved"
+      ? "status_good"
+      : "status_pending"
+  }>
+    {item.incident_status}
+  </span>
+</p>
 
   {/* 👇 ADD THESE (or keep if already there, just ensure visible) */}
   <p>Task Status: {item.task_status || "not assigned"}</p>

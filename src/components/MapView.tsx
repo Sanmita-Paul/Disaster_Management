@@ -4,7 +4,7 @@ import type { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
-
+import "./MapView.css";
 interface MapPageProps {
   role: string;
 }
@@ -77,8 +77,10 @@ const MapPage: React.FC<MapPageProps> = ({ role }) => {
 
   return (
     <div className="page-container">
-      <h2>{role} Map</h2>
-
+      <h2 className={`map_title ${role.toLowerCase()}`}>
+  {role} Map
+</h2>
+    <div className="map_wrapper">
       <SafeMapContainer
         center={toLatLng(28.6139, 77.2090)}
         zoom={11}
@@ -151,6 +153,7 @@ const MapPage: React.FC<MapPageProps> = ({ role }) => {
             ))}
       </SafeMapContainer>
     </div>
+  </div>
   );
 };
 

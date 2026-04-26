@@ -67,17 +67,34 @@ const Nearby: React.FC = () => {
   }, [location]);
 
   return (
-    <div className="page-container">
+    <div className="nearby_page">
       <h2>Nearby Disasters</h2>
 
       {incidents.length === 0 && <p>Loading disasters...</p>}
 
       {incidents.slice(0, 5).map((d, i) => (
-        <div key={i} className="card">
+        <div key={i} className="nearby_card">
           <h3>{d.disaster_type || "Disaster"}</h3>
           <p>{d.description}</p>
-          <p>Severity: {d.severity}</p>
-          <p>Distance: {d.distance.toFixed(2)} km</p>
+          <p>
+  Severity:{" "}
+  <span className={
+    d.severity === "low"
+      ? "severity_low"
+      : d.severity === "medium"
+      ? "severity_medium"
+      : "severity_high"
+  }>
+    {d.severity}
+  </span>
+</p>
+
+<p>
+  Distance:{" "}
+  <span className="nearby_distance">
+    {d.distance.toFixed(2)} km
+  </span>
+</p>
         </div>
       ))}
     </div>

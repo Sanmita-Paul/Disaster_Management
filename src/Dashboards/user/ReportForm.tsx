@@ -78,11 +78,14 @@ const ReportForm: React.FC = () => {
   };
 
   return (
-    <div className="page-container">
-      <h2>Report Disaster</h2>
+  <div className="report_page">
+    <div className="report_card">
 
-      <form className="report-form" onSubmit={handleSubmit}>
+      <h2 className="report_title">Report Disaster</h2>
 
+      <form className="report_form" onSubmit={handleSubmit}>
+
+        <label>Description</label>
         <textarea
           placeholder="Describe the situation"
           value={description}
@@ -90,18 +93,16 @@ const ReportForm: React.FC = () => {
           required
         />
 
-        <br />
-
+        <label>Disaster Type</label>
         <input
           type="text"
-          placeholder="Disaster Type (flood, fire, etc.)"
+          placeholder="Flood, Fire, Earthquake..."
           value={disasterType}
           onChange={(e) => setDisasterType(e.target.value)}
           required
         />
 
-        <br />
-
+        <label>Severity</label>
         <select
           value={severity}
           onChange={(e) => setSeverity(e.target.value)}
@@ -113,15 +114,15 @@ const ReportForm: React.FC = () => {
           <option value="high">High</option>
         </select>
 
-        <br />
-
         <button type="submit" disabled={loading}>
-          {loading ? "Submitting..." : "Submit"}
+          {loading ? "Submitting..." : "Submit Report"}
         </button>
 
       </form>
+
     </div>
-  );
+  </div>
+);
 };
 
 export default ReportForm;
