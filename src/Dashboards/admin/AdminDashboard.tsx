@@ -6,8 +6,8 @@ import Stats from "./Stats";
 import DisasterReports from "./DisasterReports";
 import MapView from "../../components/MapView";
 import Resources from "./Resources";
-import ManageUsers from "./ManageUsers";
-import Analytics from "./Analytics";
+
+
 
 /* HEADER */
 function Header_login() {
@@ -32,10 +32,6 @@ const AdminDashboard: React.FC = () => {
       return <MapView role="Admin" />;
       case "resources":
         return <Resources />;
-      case "users":
-        return <ManageUsers />;
-      case "analytics":
-        return <Analytics />;
       case "login":
         return <h2>Please log in again</h2>; // placeholder for login page
       default:

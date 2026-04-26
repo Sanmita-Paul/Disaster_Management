@@ -55,27 +55,18 @@ const MapPage: React.FC<MapPageProps> = ({ role }) => {
         setResources(data.resources || []);
 
         if (role === "Admin") {
-          const ngoRes = await fetch("http://localhost:5000/api/resources");
-          const ngoData = await ngoRes.json();
+  const ngoRes = await fetch("http://localhost:5000/api/ngos");
+  const ngoData = await ngoRes.json();
 
-          console.log("RAW NGO DATA:", ngoData);
-
-          const uniqueNgos = Object.values(
-            ngoData.reduce((acc: any, r: any) => {
-              if (r.ngo_id && r.latitude != null && r.longitude != null) {
-                acc[r.ngo_id] = {
-                  id: r.ngo_id,
-                  lat: Number(r.latitude),
-                  lng: Number(r.longitude),
-                  name: r.ngo_name || "Unknown NGO"
-                };
-              }
-              return acc;
-            }, {})
-          );
-
-          setNgos(uniqueNgos as any[]);
-        }
+  setNgos(
+    ngoData.map((n: any) => ({
+      id: n.id,
+      lat: Number(n.latitude),
+      lng: Number(n.longitude),
+      name: n.name
+    }))
+  );
+}
       } catch (err) {
         console.error(err);
       }

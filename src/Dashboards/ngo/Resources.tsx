@@ -26,7 +26,7 @@ const LocationPicker = ({ setLatLng }: any) => {
 };
 
 const Requests: React.FC = () => {
-  const [type, setType] = useState("");
+  const [type, setType] = useState("shelter");
   const [availability, setAvailability] = useState(true);
   const [quantity, setQuantity] = useState(0);
 

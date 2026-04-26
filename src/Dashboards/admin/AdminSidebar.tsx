@@ -23,8 +23,7 @@ const AdminSidebar: React.FC<Props> = ({ setPage }) => {
       <button type="button" onClick={() => setPage("reports")}>📝 Disaster Reports</button>
       <button type="button" onClick={() => setPage("map")}>🗺️ Map View</button>
       <button type="button" onClick={() => setPage("resources")}>📦 Resources</button>
-      <button type="button" onClick={() => setPage("users")}>👥 Manage Users</button>
-      <button type="button" onClick={() => setPage("analytics")}>📈 Analytics</button>
+      
 
       {/* Logout Button */}
       <button
